@@ -1,23 +1,13 @@
-import { ApolloServer } from '@apollo/server';
+import { ApolloServer, BaseContext } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
+import typeDefs from './schemas'
+import resolvers from './resolvers'
 
 async function bootstrap () {
-    const typeDefs = `#graphql
-    type Query {
-        hello: String
-    }
-    `;
-
-    const resolvers = {
-    Query: {
-        hello: () => 'world',
-    },
-    };
-
     const app = express();
     const httpServer = http.createServer(app);
 

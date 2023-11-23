@@ -1,5 +1,8 @@
-export const userResolver = {
-    Query: {
-      user: () => 'hello this is user query',
-    },
+import { BaseContext } from "@apollo/server";
+
+
+export const userResolver: BaseContext = {
+  Query: {
+      user: () => 'hello this is user route',
+  },
 };
