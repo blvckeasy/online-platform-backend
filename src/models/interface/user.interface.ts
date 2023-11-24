@@ -1,8 +1,10 @@
 import { EUserRole } from "../enums/userRole.enum";
 
-export interface ICreateUserModel {
+export interface IUser {
+    id: number;
     fullname: string;
     telegram_user_id: number;
-    contact: string;
-    role?: EUserRole;
+    contact: number;
+    role: EUserRole,
+    signed_time: Date;
 }
