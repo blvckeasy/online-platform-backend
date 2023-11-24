@@ -1,15 +1,14 @@
 import { Client } from "pg";
-import { connectDatabase } from "../utils/pg";
+import { client } from "../utils/pg";
 import { ICreateUserModel } from "./interface/createUserModel.interface";
 import { AlreadyExistsExcaption } from "../utils/errors";
 import { IUser } from "./interface/user.interface";
-import { EUserRole } from "./enums/userRole.enum";
 
-class UserModel {
+export default class UserModel {
     private client: Client;
 
     constructor () {
-        this.client = connectDatabase();
+        this.client = client;
         this.#createTableIfNotExists();
     }
 
@@ -18,8 +17,8 @@ class UserModel {
             CREATE TABLE IF NOT EXISTS users (
                 ID SERIAL PRIMARY KEY,
                 FULLNAME VARCHAR(64) NOT NULL,
-                TELEGRAM_USER_ID INT UNIQUE,
-                CONTACT VARCHAR(32) UNIQUE,
+                TELEGRAM_USER_ID INT NOT NULL UNIQUE,
+                CONTACT VARCHAR(32) NOT NULL UNIQUE,
                 ROLE user_role DEFAULT 'student', 
                 SIGNED_TIME TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP 
             );
@@ -27,27 +26,16 @@ class UserModel {
     }
 
     async create (createUserParams: ICreateUserModel): Promise<IUser | void> {
-        const { fullname, contact, role } = createUserParams;
-
+        const { fullname, contact, role, telegram_user_id } = createUserParams;
         const result = await this.client.query(`
-            SELECT * FROM USERS WHERE contact = $1 LIMIT 1;
-        `, [contact])
+            SELECT * FROM USERS WHERE contact = $1 or telegram_user_id = $2 LIMIT 1;
+        `, [contact, telegram_user_id])
         const foundUser = result.rows[0];
-    
         if (foundUser) throw new AlreadyExistsExcaption("User is already exists");
-
+        
         const newUser = (await this.client.query(`
             INSERT INTO users (FULLNAME, CONTACT, ROLE) VALUES ($1, $2, $3) RETURNING *;
-        `, [ fullname, contact, role || "STUDENT"])).rows[0];
-
+        `, [ fullname, contact, role])).rows[0];
         return newUser;
     }
 }
-
-const userModel = new UserModel();
-userModel.create({
-    contact: "+123123123213123",
-    telegram_user_id: 123456123,
-    fullname: "Abdurahmonov Islom",
-    role: EUserRole.STUDENT,
-})

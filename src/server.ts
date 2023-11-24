@@ -6,6 +6,7 @@ import http from 'http';
 import cors from 'cors';
 import typeDefs from './schemas'
 import resolvers from './resolvers'
+import { connectDatabase } from './utils/pg';
 
 async function bootstrap () {
     const app = express();
@@ -16,6 +17,9 @@ async function bootstrap () {
         resolvers,
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     });
+
+    await connectDatabase();
+
     await server.start();
 
     app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(server));
