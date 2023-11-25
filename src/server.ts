@@ -1,4 +1,4 @@
-import { ApolloServer, BaseContext } from '@apollo/server';
+import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
 import express from 'express';
@@ -7,6 +7,7 @@ import cors from 'cors';
 import typeDefs from './schemas'
 import resolvers from './resolvers'
 import { connectDatabase } from './utils/pg';
+import graphqlScalarTypes from './utils/graphqlScalarTypes';
 
 async function bootstrap () {
     const app = express();
@@ -14,16 +15,17 @@ async function bootstrap () {
 
     const server = new ApolloServer({
         typeDefs,
-        resolvers,
+        resolvers: [graphqlScalarTypes, ...resolvers],
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     });
 
     await connectDatabase();
-
     await server.start();
 
-    app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(server));
-
+    app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(server, {
+        context: ({ req }) => ({ req }) as any,
+    }));
+    
     app.get("/api/helloworld", (req, res) => {
         res.send("hello world")
     })

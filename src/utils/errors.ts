@@ -19,3 +19,14 @@ export class AlreadyExistsExcaption extends Error {
         this.message = message
     }
 }
+
+export class InvalidTokenException extends Error {
+    public code: number = 400;
+    public message: string;
+
+    constructor(message: string, code?: number) {
+        super(message);
+        this.code = code
+        this.message = message
+    }
+}

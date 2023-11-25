@@ -15,8 +15,6 @@
 //         const filePath = join(__dirname, fileName);
 //         const { default: model } = await import(filePath);
 
-//         console.log(model)
-
 //         new model()
 //     }
 // }
