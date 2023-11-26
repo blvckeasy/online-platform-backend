@@ -27,12 +27,29 @@ export default async (error: ErrorStructure) => {
     const errorMessage = error.message;
     const errorType = error.code;
     const errorInstance = error.constructor.name;
+    const filePath = join(__dirname, "errors.ts");
+    const allErrors = await import(filePath);
 
-    throw new GraphQLError(errorMessage, {
+    const errorNames = Object.keys(allErrors);
+
+    errorNames.forEach((name) => {
+        if (name === errorInstance) {
+            throw new GraphQLError(errorMessage, {
+                extensions: {
+                    code: errorType.errorCode,
+                    http: {
+                        status: errorType.errorStatus
+                    }
+                }
+            })
+        }
+    })
+
+    throw new GraphQLError("Internal Server Error", {
         extensions: {
-            code: errorType.errorCode,
+            code: 500,
             http: {
-                status: errorType.errorStatus
+                status: ErrorTypes.INTERNAL_SERVER_ERROR
             }
         }
     })

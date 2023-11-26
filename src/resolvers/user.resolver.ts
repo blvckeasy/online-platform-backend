@@ -9,8 +9,6 @@ import CustomError, { ErrorTypes } from '../utils/error-handler';
 class UserController {
 	static async createUser (createUserInput: ICreateUserInput, context): Promise<IUserResponse> {
 		try {
-			console.log(createUserInput);
-
 			const req = context.req as Request;
 			const userAgent = req.headers["user-agent"] as string;
 			const { fullname, telegram_user_id, contact, role } = createUserInput;
