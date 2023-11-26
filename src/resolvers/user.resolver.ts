@@ -31,10 +31,7 @@ class UserController {
 				}
 			} as IUserResponse
 		} catch (error) {
-			console.log(typeof(error))
-			console.log(error.constructor.name);
-
-			throw CustomError(error.message, error.code, error.constructor.name);
+			throw await CustomError(error);
 		}
 	}
 

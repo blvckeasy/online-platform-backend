@@ -1,7 +1,8 @@
 import { join } from "path"
 import { GraphQLError } from "graphql";
 import { ApolloServerErrorCode } from '@apollo/server/errors'
-// import { ErrorStructure } from "./errors";
+import { ErrorStructure } from "./errors";
+
 
 export const ErrorTypes = {
     BAD_USER_INPUT: {
@@ -22,24 +23,10 @@ export const ErrorTypes = {
     }
 }
 
-export default (errorMessage, errorType, errorInstance) => {
-    new Promise(async (resolve, reject) => {
-        const filePath = join(__dirname, "errors.ts");
-        const allErrors: Error[] = await import(filePath);    
-
-        Object.keys(allErrors).forEach((error) => {
-            if (allErrors[error].constructor.name == errorInstance) {
-                throw new GraphQLError(errorMessage, {
-                    extensions: {
-                        code: 500,
-                        http: {
-                            status: ErrorTypes.INTERNAL_SERVER_ERROR
-                        }
-                    }
-                })
-            }
-        })
-    })
+export default async (error: ErrorStructure) => {
+    const errorMessage = error.message;
+    const errorType = error.code;
+    const errorInstance = error.constructor.name;
 
     throw new GraphQLError(errorMessage, {
         extensions: {
@@ -50,61 +37,3 @@ export default (errorMessage, errorType, errorInstance) => {
         }
     })
 }
-
-// export default async (error: any) => {
-//     const { errorMessage, code: errorType } = error;
-//     const errorInstance = error.constructor.name;
-
-//     const filePath = join(__dirname, "errors.ts");
-//     const allErrors: Error[] = await import(filePath);    
-
-//     Object.keys(allErrors).forEach((error) => {
-//         if (allErrors[error].constructor.name == errorInstance) {
-//             throw new GraphQLError(errorMessage, {
-//                 extensions: {
-//                     code: 500,
-//                     http: {
-//                         status: ErrorTypes.INTERNAL_SERVER_ERROR
-//                     }
-//                 }
-//             })
-//         }
-//     })
-
-//     throw new GraphQLError(errorMessage, {
-//         extensions: {
-//             code: errorType.errorCode,
-//             http: {
-//                 status: errorType.errorStatus
-//             }
-//         }
-//     })
-// }
-
-
-// export async function ErrorHandler (errorClass: ErrorStructure) {
-//     const filePath = join(__dirname, "errors.ts");
-//     const allErrors: Error[] = await import(filePath);
-
-//     for await (const errorName of Object.keys(allErrors)) {
-//         if (errorClass instanceof allErrors[errorName]) {
-//             throw new GraphQLError(errorClass.message, {
-//                 extensions: {
-//                     code: errorClass.code.errorCode,
-//                     http: {
-//                         status: errorClass.code.errorStatus,
-//                     }
-//                 }
-//             })
-//         }
-//     }
-
-//     throw new GraphQLError("Internal server error", {
-//         extensions: {
-//             code: 500,
-//             http: {
-//                 status: 500,
-//             }
-//         }
-//     })
-// }
