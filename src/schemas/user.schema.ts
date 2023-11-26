@@ -1,20 +1,10 @@
 export const userTypeDef = `#graphql
     scalar DateTime
 
-    # type AlreadyExistsExcaption {
-    #     message: String!
-    #     code: Int!
-    # }
-
     enum EUserRole {
-        ADMIN
-        TEACHER
-        STUDENT
-    }
-    
-    type Token {
-        access_token: String!
-        refresh_token: String!
+        admin
+        teacher
+        student
     }
 
     input CreateUserInput {
@@ -24,9 +14,16 @@ export const userTypeDef = `#graphql
         role: EUserRole
     }
 
-    type Query {
-        user: String
+    input UpdateUserInput {
+        fullname: String
+        role: EUserRole
     }
+    
+    type Token {
+        access_token: String!
+        refresh_token: String!
+    }
+
 
     type User {
         id: ID!
@@ -42,9 +39,12 @@ export const userTypeDef = `#graphql
         token: Token!
     }
 
-    # union CreateUserResponse = ResponseUser | AlreadyExistsExcaption;
+    type Query {
+        user: String
+    }
 
     type Mutation {
         createUser(createUserInput: CreateUserInput!): ResponseUser
+        updateUser(updateUserInput: UpdateUserInput!): User
     }
 `;

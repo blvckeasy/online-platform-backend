@@ -21,3 +21,7 @@ export class UnauthorizedExcaption extends ErrorStructure {}
 export class AlreadyExistsExcaption extends ErrorStructure {}
 
 export class InvalidTokenException extends ErrorStructure {}
+
+export class NotFoundException extends ErrorStructure {}
+
+export class RequiredParamException extends ErrorStructure {}

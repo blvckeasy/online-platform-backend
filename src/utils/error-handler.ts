@@ -20,6 +20,14 @@ export const ErrorTypes = {
     INTERNAL_SERVER_ERROR: {
         errorCode: ApolloServerErrorCode.INTERNAL_SERVER_ERROR,
         errorStatus: 500,
+    },
+    NOT_FOUND: {
+        errorCode: ApolloServerErrorCode.OPERATION_RESOLUTION_FAILURE,
+        errorStatus: 404,
+    },
+    REQUIRED_PARAM: {
+        errorCode: ApolloServerErrorCode.BAD_REQUEST,
+        errorStatus: 402
     }
 }
 

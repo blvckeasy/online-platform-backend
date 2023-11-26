@@ -5,7 +5,7 @@ import { ErrorTypes } from './error-handler';
 export default class JWT {
     static sign (payload: string | object | Buffer) {
         const token = Jwt.sign(payload, "helloworldhelloworldhelloworld", {
-            expiresIn: "7 days"
+            expiresIn: "7d"
         });
         return token;
     }

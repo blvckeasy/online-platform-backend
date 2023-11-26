@@ -29,3 +29,8 @@ export interface IUserResponse {
         refresh_token: string;
     }
 }
+
+export interface IUpdateUserInput {
+    fullname: string;
+    role: EUserRole;
+}
