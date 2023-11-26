@@ -1,32 +1,23 @@
-export class UnauthorizedExcaption extends Error {
-    public code: number = 401;
+import { ApolloServerErrorCode } from "@apollo/server/dist/esm/errors";
+
+interface errorStatus {
+    errorCode: ApolloServerErrorCode;
+    errorStatus: number;
+}
+
+export class ErrorStructure extends Error {
+    public code: errorStatus;
     public message: string;
 
-    constructor(message: string, code?: number) {
+    constructor(message: string, code: errorStatus) {
         super(message);
         this.code = code
         this.message = message
     }
 }
 
-export class AlreadyExistsExcaption extends Error {
-    public code: number = 400;
-    public message: string;
+export class UnauthorizedExcaption extends ErrorStructure {}
 
-    constructor(message: string, code?: number) {
-        super(message);
-        this.code = code
-        this.message = message
-    }
-}
+export class AlreadyExistsExcaption extends ErrorStructure {}
 
-export class InvalidTokenException extends Error {
-    public code: number = 400;
-    public message: string;
-
-    constructor(message: string, code?: number) {
-        super(message);
-        this.code = code
-        this.message = message
-    }
-}
+export class InvalidTokenException extends ErrorStructure {}

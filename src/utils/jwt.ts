@@ -1,5 +1,6 @@
 import Jwt from 'jsonwebtoken';
 import { InvalidTokenException } from './errors';
+import { ErrorTypes } from './error-handler';
 
 export default class JWT {
     static sign (payload: string | object | Buffer) {
@@ -14,7 +15,7 @@ export default class JWT {
             const payload = Jwt.verify(token, "helloworldhelloworldhelloworld");
             return payload;
         } catch (err) {
-            throw new InvalidTokenException("Token has expired!");
+            throw new InvalidTokenException("Token has expired!", ErrorTypes.INVALID_TOKEN);
         }
     }
 }

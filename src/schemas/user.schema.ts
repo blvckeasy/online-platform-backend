@@ -1,10 +1,15 @@
 export const userTypeDef = `#graphql
     scalar DateTime
 
+    # type AlreadyExistsExcaption {
+    #     message: String!
+    #     code: Int!
+    # }
+
     enum EUserRole {
-        admin
-        teacher
-        student
+        ADMIN
+        TEACHER
+        STUDENT
     }
     
     type Token {
@@ -37,7 +42,9 @@ export const userTypeDef = `#graphql
         token: Token!
     }
 
+    # union CreateUserResponse = ResponseUser | AlreadyExistsExcaption;
+
     type Mutation {
-        createUser(createUserInput: CreateUserInput!): ResponseUser!
+        createUser(createUserInput: CreateUserInput!): ResponseUser
     }
-`
+`;
