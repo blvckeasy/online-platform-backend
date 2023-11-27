@@ -1,4 +1,4 @@
-import { ICreateOTPinput, IOTP } from "../interfaces/otp.interface";
+import { ICreateOTPinput, IDeleteOTPinput, IOTP } from "../interfaces/otp.interface";
 import ErrorHandler from "../utils/error-handler";
 import { generateRandomNumber } from "../utils/generate-code";
 import { client } from "../utils/pg";
@@ -21,6 +21,20 @@ export class OTPService {
             `, [telegram_user_id, randomCode])).rows[0];
     
             return newCode;
+        } catch (error) {
+            throw await ErrorHandler(error);
+        }
+    }
+
+    static async delete (deleteOTPinput: IDeleteOTPinput): Promise<IOTP> {
+        try {
+            const { telegram_user_id } = deleteOTPinput;
+
+            const deletedOTP: IOTP = (await client.query(`
+                DELETE FROM otp WHERE telegram_user_id = $1 RETURNING *;
+            `, [telegram_user_id])).rows[0];
+
+            return deletedOTP;
         } catch (error) {
             throw await ErrorHandler(error);
         }

@@ -4,7 +4,7 @@ import { ICreateUserQueueInput, IUserQueue } from "../interfaces/users-queue.int
 import { OTPService } from "./otp.service";
 import CustomError, { ErrorTypes } from '../utils/error-handler'
 import { client } from "../utils/pg";
-import { UnauthorizedExcaption } from "../utils/errors";
+import { AuthorizationFailed, UnauthorizedExcaption } from "../utils/errors";
 import { UserService } from "./user.service";
 import { UsersQueueService } from "./users-queue.service";
 import { IUser } from "../interfaces/user.interface";
@@ -15,16 +15,19 @@ export class AuthService {
         return await OTPService.create(createUserQueueInput)
     }
 
-    static async register (registerUserInput: IAuthRegisterUserInput) {
+    static async register (registerUserInput: IAuthRegisterUserInput): Promise<IUser> {
         try {
+            const { code } = registerUserInput;
+
             const foundOTP: IOTP = (await client.query(`
-                SELECT * FROM otp WHERE telegram_user_id = $1 AND sended_time + INTERVAL '1 minute';
-            `,)).rows[0];
+                SELECT * FROM otp WHERE code = $1 AND NOW() < sended_time + INTERVAL '1 minute';
+            `, [code])).rows[0];
 
-            if (!foundOTP) throw new UnauthorizedExcaption("you have not been given a code!", ErrorTypes.BAD_USER_INPUT);
-
+            if (!foundOTP) throw new UnauthorizedExcaption("Code expired!", ErrorTypes.BAD_USER_INPUT);
+    
             if (foundOTP.code === registerUserInput.code) {
                 const userInfo: IUserQueue = await UsersQueueService.deleteUser(foundOTP.telegram_user_id);
+                const deletedOTP: IOTP = await OTPService.delete({ telegram_user_id: userInfo.telegram_user_id }); // delete otp code
 
                 const newUser: IUser = await UserService.createUser({
                     telegram_user_id: userInfo.telegram_user_id,
@@ -32,9 +35,11 @@ export class AuthService {
                     fullname: userInfo.fullname,
                     role: userInfo.role
                 })
+
+                return newUser;
             }
 
-            console.log()
+            throw new AuthorizationFailed("Wrong code!", ErrorTypes.BAD_USER_INPUT);
         } catch (error) {
             throw await CustomError(error);
         }

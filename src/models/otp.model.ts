@@ -13,7 +13,7 @@ export default class OTPModel {
         this.client.query(`
             CREATE TABLE IF NOT EXISTS otp (
                 ID SERIAL PRIMARY KEY,
-                telegram_user_id INT REFERENCES users(ID),
+                telegram_user_id INT,
                 code INT NOT NULL,
                 sended_time TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
             );

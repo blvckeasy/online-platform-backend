@@ -4,6 +4,10 @@ export interface ICreateOTPinput {
     contact: string;
 }
 
+export interface IDeleteOTPinput {
+    telegram_user_id: number;
+}
+
 export interface IOTP {
     id: number;
     telegram_user_id: number;
