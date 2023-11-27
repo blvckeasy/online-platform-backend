@@ -40,6 +40,7 @@ export default async (error: ErrorStructure) => {
 
     const errorNames = Object.keys(allErrors);
 
+
     errorNames.forEach((name) => {
         if (name === errorInstance) {
             throw new GraphQLError(errorMessage, {

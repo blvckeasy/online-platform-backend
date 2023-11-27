@@ -11,14 +11,14 @@ export class UserService {
 		try {
 			const req = context.req as Request;
 			const userAgent = req.headers["user-agent"] as string;
-			const { fullname, telegram_user_id, contact, role } = createUserInput;
+			const { fullname, telegram_user_id, contact } = createUserInput;
 
 			const user: IUser = await this.findOneWithContact(contact);
 			if (user) throw new AlreadyExistsExcaption("User is already exists", ErrorTypes.BAD_USER_INPUT);
 
 			const result = await client.query(`
-				INSERT INTO users (fullname, telegram_user_id, contact, role) VALUES ($1, $2, $3, $4) RETURNING *;
-			`, [fullname, telegram_user_id, contact, role]);
+				INSERT INTO users (fullname, telegram_user_id, contact) VALUES ($1, $2, $3) RETURNING *;
+			`, [fullname, telegram_user_id, contact]);
 			const newUser: IUser = result.rows[0];
 
 			return {

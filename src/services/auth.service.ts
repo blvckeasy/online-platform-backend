@@ -1,11 +1,9 @@
 import { ICreatedOTPResponse } from "../interfaces/otp.interface";
-import { ICreateUserInput } from "../interfaces/user.interface";
+import { ICreateUserQueueInput } from "../interfaces/users-queue.interface";
 import { OTPService } from "./otp.service";
 
 export class AuthService {
-    static async generateCode (createUserInput: ICreateUserInput): Promise<ICreatedOTPResponse> {
-        const { telegram_user_id, contact, fullname } = createUserInput;
-    
-        return await OTPService.create({ telegram_user_id })
+    static async generateCode (createUserQueueInput: ICreateUserQueueInput): Promise<ICreatedOTPResponse> {
+        return await OTPService.create(createUserQueueInput)
     }
 }
