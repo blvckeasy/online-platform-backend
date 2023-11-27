@@ -4,7 +4,7 @@ export interface ICreateOTPinput {
     contact: string;
 }
 
-export interface ICreatedOTPResponse {
+export interface IOTP {
     id: number;
     telegram_user_id: number;
     code: number;

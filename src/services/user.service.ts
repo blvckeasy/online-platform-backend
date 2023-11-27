@@ -1,33 +1,24 @@
-import { Request } from 'express';
 import { client } from "../utils/pg";
 import JWT from "../utils/jwt";
 import { AlreadyExistsExcaption, BadRequestExcaption, InvalidTokenException, NotFoundException, RequiredParamException } from '../utils/errors';
 import CustomError, { ErrorTypes } from '../utils/error-handler';
-import { ICreateUserInput, IUpdateUserInput, IUser, IUserResponse } from '../interfaces/user.interface';
+import { ICreateUserInput, IUpdateUserInput, IUser } from '../interfaces/user.interface';
 
 
 export class UserService {
-	static async createUser (createUserInput: ICreateUserInput, context): Promise<IUserResponse> {
+	static async createUser (createUserInput: ICreateUserInput): Promise<IUser> {
 		try {
-			const req = context.req as Request;
-			const userAgent = req.headers["user-agent"] as string;
 			const { fullname, telegram_user_id, contact } = createUserInput;
-
 			const user: IUser = await this.findOneWithContact(contact);
-			if (user) throw new AlreadyExistsExcaption("User is already exists", ErrorTypes.BAD_USER_INPUT);
+			
+            if (user) throw new AlreadyExistsExcaption("User is already exists", ErrorTypes.BAD_USER_INPUT);
 
 			const result = await client.query(`
 				INSERT INTO users (fullname, telegram_user_id, contact) VALUES ($1, $2, $3) RETURNING *;
 			`, [fullname, telegram_user_id, contact]);
 			const newUser: IUser = result.rows[0];
-
-			return {
-				user: newUser,
-				token: {
-					access_token: JWT.sign({ id: newUser.id, contact: newUser.contact, userAgent }),
-					refresh_token: JWT.sign({ id: newUser, userAgent }),
-				}
-			} as IUserResponse
+			
+            return newUser
 		} catch (error) {
             console.log(error);
 			throw await CustomError(error);
@@ -58,16 +49,10 @@ export class UserService {
         }
 	}
 
-    static async updateUser (updateUserInput: IUpdateUserInput, context: any): Promise<IUser> {
+    static async updateUser (updateUserInput: IUpdateUserInput, user: IUser): Promise<IUser> {
         try {
             const { fullname, role } = updateUserInput;
-            const { token } = context.req.headers;
-    
-            if (!token) throw new RequiredParamException("Token is requred!", ErrorTypes.INVALID_TOKEN);
-
-            const user = JWT.verify(token) as IUser;
             const foundUser = await this.findOneWithID(user.id) as IUser;
-
             if (!foundUser) throw new NotFoundException("User is not found!", ErrorTypes.NOT_FOUND);
     
             const result = await client.query(`
@@ -81,7 +66,7 @@ export class UserService {
             `, [fullname, role, foundUser.id]);
     
             const updatedUser = result.rows[0] as IUser;
-            console.log(updatedUser);
+
             return updatedUser;
         } catch (error) {
             console.log(error);
@@ -89,14 +74,8 @@ export class UserService {
         }
     }
 
-    static async deleteUser (context: any): Promise<IUser> {
+    static async deleteUser (user: IUser): Promise<IUser> {
         try {
-            const { token } = context.req.headers;
-            if (!token) throw new RequiredParamException("Token is required!", ErrorTypes.REQUIRED_PARAM);
-
-            const user = JWT.verify(token) as IUser;
-            if (!user) throw new InvalidTokenException("Invalid token!", ErrorTypes.INVALID_TOKEN);
-
             const foundUser: IUser = await this.findOneWithID(user.id);
             if (!foundUser) throw new BadRequestExcaption("User not found!", ErrorTypes.BAD_REQUEST);
 
