@@ -18,7 +18,6 @@ export const authResvoler: BaseContext = {
         async register (_: any, { registerUserInput }: { registerUserInput: IAuthRegisterUserInput }, context: any): Promise<IUserResponse> {
             const req = context.req as Request;
 			const userAgent = req.headers["user-agent"] as string;
-
             const newUser: IUser = await AuthService.register(registerUserInput);
             
             return {

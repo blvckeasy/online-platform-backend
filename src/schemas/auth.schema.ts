@@ -23,6 +23,6 @@ export const authTypeDef = `#graphql
 
     type Mutation {
         generateCode(createUserQueueInput: CreateUserQueueInput!): CreatedOTPResponse!
-        register(registerUserInput: RegisterUserInput!): User!
+        register(registerUserInput: RegisterUserInput!): ResponseUser!
     }
 `

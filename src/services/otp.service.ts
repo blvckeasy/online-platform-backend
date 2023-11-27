@@ -29,7 +29,6 @@ export class OTPService {
     static async delete (deleteOTPinput: IDeleteOTPinput): Promise<IOTP> {
         try {
             const { telegram_user_id } = deleteOTPinput;
-
             const deletedOTP: IOTP = (await client.query(`
                 DELETE FROM otp WHERE telegram_user_id = $1 RETURNING *;
             `, [telegram_user_id])).rows[0];
