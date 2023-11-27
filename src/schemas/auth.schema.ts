@@ -7,6 +7,12 @@ export const authTypeDef = `#graphql
         contact: String!
     }
 
+    input RegisterUserInput {
+        fullname: String
+        telegram_user_id: Int!
+        code: Int!
+    }
+
     type CreatedOTPResponse {
         id: Int!
         telegram_user_id: Int!
@@ -17,5 +23,6 @@ export const authTypeDef = `#graphql
 
     type Mutation {
         generateCode(createUserQueueInput: CreateUserQueueInput!): CreatedOTPResponse!
+        register(registerUserInput: RegisterUserInput!): User!
     }
 `

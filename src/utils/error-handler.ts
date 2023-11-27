@@ -31,7 +31,7 @@ export const ErrorTypes = {
     }
 }
 
-export default async (error: ErrorStructure) => {
+export default async function ErrorHandler (error: ErrorStructure) {
     const errorMessage = error.message;
     const errorType = error.code;
     const errorInstance = error.constructor.name;
