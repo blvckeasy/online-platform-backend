@@ -25,3 +25,5 @@ export class InvalidTokenException extends ErrorStructure {}
 export class NotFoundException extends ErrorStructure {}
 
 export class RequiredParamException extends ErrorStructure {}
+
+export class BadRequestExcaption extends ErrorStructure {}

@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { client } from "../utils/pg";
 import JWT from "../utils/jwt";
-import { AlreadyExistsExcaption, NotFoundException, RequiredParamException } from '../utils/errors';
+import { AlreadyExistsExcaption, BadRequestExcaption, InvalidTokenException, NotFoundException, RequiredParamException } from '../utils/errors';
 import CustomError, { ErrorTypes } from '../utils/error-handler';
 import { ICreateUserInput, IUpdateUserInput, IUser, IUserResponse } from '../resolvers/interface/user.interface';
 
@@ -85,6 +85,28 @@ export class UserService {
             return updatedUser;
         } catch (error) {
             console.log(error);
+            throw await CustomError(error);
+        }
+    }
+
+    static async deleteUser (context: any): Promise<IUser> {
+        try {
+            const { token } = context.req.headers;
+            if (!token) throw new RequiredParamException("Token is required!", ErrorTypes.REQUIRED_PARAM);
+
+            const user = JWT.verify(token) as IUser;
+            if (!user) throw new InvalidTokenException("Invalid token!", ErrorTypes.INVALID_TOKEN);
+
+            const foundUser: IUser = await this.findOneWithID(user.id);
+            if (!foundUser) throw new BadRequestExcaption("User not found!", ErrorTypes.BAD_REQUEST);
+
+            const result = await client.query(`
+                DELETE FROM USERS WHERE id = $1 RETURNING *;
+            `, [foundUser.id])
+            
+            const deletedUser: IUser = result.rows[0];
+            return deletedUser;
+        } catch (error) {
             throw await CustomError(error);
         }
     }

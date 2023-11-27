@@ -53,6 +53,7 @@ export default async (error: ErrorStructure) => {
         }
     })
 
+    console.error(error);
     throw new GraphQLError("Internal Server Error", {
         extensions: {
             code: 500,

@@ -41,6 +41,7 @@ export const userTypeDef = `#graphql
 
     type Query {
         user: String
+        deleteUser: User
     }
 
     type Mutation {
