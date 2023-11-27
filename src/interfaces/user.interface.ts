@@ -1,4 +1,4 @@
-import { EUserRole } from "../../models/enums/userRole.enum";
+import { EUserRole } from "../models/enums/userRole.enum";
 
 export interface IGetUsers {
     id: number;
@@ -7,7 +7,7 @@ export interface IGetUsers {
 }
 
 export interface ICreateUserInput {
-    fullname: string;
+    fullname?: string;
     telegram_user_id: number;
     contact: string;
     role: EUserRole;
@@ -31,6 +31,6 @@ export interface IUserResponse {
 }
 
 export interface IUpdateUserInput {
-    fullname: string;
+    fullname?: string;
     role: EUserRole;
 }

@@ -3,7 +3,7 @@ import { client } from "../utils/pg";
 import JWT from "../utils/jwt";
 import { AlreadyExistsExcaption, BadRequestExcaption, InvalidTokenException, NotFoundException, RequiredParamException } from '../utils/errors';
 import CustomError, { ErrorTypes } from '../utils/error-handler';
-import { ICreateUserInput, IUpdateUserInput, IUser, IUserResponse } from '../resolvers/interface/user.interface';
+import { ICreateUserInput, IUpdateUserInput, IUser, IUserResponse } from '../interfaces/user.interface';
 
 
 export class UserService {

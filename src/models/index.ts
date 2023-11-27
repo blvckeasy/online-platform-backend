@@ -21,10 +21,12 @@
 
 import UserModel from "./user.model";
 import OTPModel from "./otp.model";
-import UserProfileAvatarModel from "./userProfileAvatar.model";
+import UserProfileAvatarModel from "./user-profile-avatar.model";
+import UsersQueueModel from "./users-queue.model";
 
 export default function initModels () {
     new UserModel();
     new OTPModel();
     new UserProfileAvatarModel();
+    new UsersQueueModel()
 }

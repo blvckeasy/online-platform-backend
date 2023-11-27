@@ -1,5 +1,5 @@
 import { BaseContext } from "@apollo/server";
-import { ICreateUserInput, IUpdateUserInput, IUser, IUserResponse } from "./interface/user.interface";
+import { ICreateUserInput, IUpdateUserInput, IUser, IUserResponse } from "../interfaces/user.interface";
 import { UserService } from "../services/user.service";
 
 
