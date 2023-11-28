@@ -38,4 +38,23 @@ export class OTPService {
             throw await ErrorHandler(error);
         }
     }
+
+    static async getCodes(): Promise<number[]> {
+        try {
+            const codes: number[] = (await client.query(`
+                SELECT code FROM otp;
+            `)).rows;
+
+            return codes;
+        } catch (error) {
+            throw await ErrorHandler(error);
+        }
+    }
 }
+
+// where the program deletes codes that have passed the code activation state every 1.5 minutes to be able to use them again.
+setInterval(async () => {
+    await client.query(`
+        DELETE FROM otp WHERE sended_time + INTERVAL '5 minute' <= NOW();
+    `)
+}, 90000) // 1.5 minute
