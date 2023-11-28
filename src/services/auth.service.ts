@@ -31,7 +31,7 @@ export class AuthService {
             
             if (foundOTP.code === registerUserInput.code) {
                 const userInfo: IUserQueue = await UsersQueueService.deleteUser(foundOTP.telegram_user_id);
-                const deletedOTP: IOTP = await OTPService.delete({ telegram_user_id: userInfo.telegram_user_id }); // delete otp code
+                await OTPService.delete({ telegram_user_id: userInfo.telegram_user_id }); // delete otp code
 
                 const foundUser: IUser = await UserService.findOneWithContact(userInfo.contact);
                 if (!foundUser) {
@@ -41,7 +41,6 @@ export class AuthService {
                         fullname: userInfo.fullname,
                         role: userInfo.role
                     })
-                    console.log("newUser:", newUser);
                     return newUser;
                 }
                 return foundUser

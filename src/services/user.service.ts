@@ -20,7 +20,6 @@ export class UserService {
 			
             return newUser
 		} catch (error) {
-            console.log(error);
 			throw await CustomError(error);
 		}
 	}
@@ -69,7 +68,6 @@ export class UserService {
 
             return updatedUser;
         } catch (error) {
-            console.log(error);
             throw await CustomError(error);
         }
     }
