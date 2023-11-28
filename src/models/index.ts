@@ -23,10 +23,16 @@ import UserModel from "./user.model";
 import OTPModel from "./otp.model";
 import UserProfileAvatarModel from "./user-profile-avatar.model";
 import UsersQueueModel from "./users-queue.model";
+import CoursesModel from "./courses.model";
+import CourseThemesModel from "./course-themes.model";
+import CourseVideosModel from "./course-videos.model";
 
 export default function initModels () {
     new UserModel();
     new OTPModel();
     new UserProfileAvatarModel();
-    new UsersQueueModel()
+    new UsersQueueModel();
+    new CoursesModel();
+    new CourseThemesModel();
+    new CourseVideosModel();
 }

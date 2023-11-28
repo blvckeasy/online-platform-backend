@@ -7,7 +7,7 @@ import cors from 'cors';
 import typeDefs from './schemas'
 import resolvers from './resolvers'
 import { connectDatabase } from './utils/pg';
-import graphqlScalarTypes from './utils/graphqlScalarTypes';
+import graphqlScalarTypes from './utils/graphql-scalar-types';
 
 async function bootstrap () {
     const app = express();

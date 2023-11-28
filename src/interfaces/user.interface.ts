@@ -1,4 +1,4 @@
-import { EUserRole } from "../models/enums/userRole.enum";
+import { EUserRole } from "../models/enums/user-role.enum";
 
 export interface IGetUsers {
     id: number;

@@ -1,6 +1,6 @@
 import { Client } from "pg";
 import { client } from "../utils/pg";
-import { ICreateUserModel } from "./interface/createUserModel.interface";
+import { ICreateUserModel } from "./interface/create-user-model.interface";
 import { AlreadyExistsExcaption } from "../utils/errors";
 import { IUser } from "./interface/user.interface";
 import { ErrorTypes } from "../utils/error-handler";

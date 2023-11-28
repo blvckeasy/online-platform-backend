@@ -1,4 +1,4 @@
-import { EUserRole } from "../enums/userRole.enum";
+import { EUserRole } from "../enums/user-role.enum";
 
 export interface ICreateUserModel {
     fullname: string;

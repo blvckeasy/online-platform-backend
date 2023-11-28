@@ -11,7 +11,7 @@ export default class UsersQueueModel {
 
     #createDatabaseIfNotExists () {
         this.client.query(`
-            CREATE TABLE IF NOT EXISTS usersqueue (
+            CREATE TABLE IF NOT EXISTS users_queue (
                 ID SERIAL PRIMARY KEY,
                 FULLNAME VARCHAR(64) NOT NULL,
                 TELEGRAM_USER_ID INT NOT NULL UNIQUE,
