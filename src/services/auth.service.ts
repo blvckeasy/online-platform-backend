@@ -8,6 +8,7 @@ import { AuthorizationFailed, UnauthorizedExcaption } from "../utils/errors";
 import { UserService } from "./user.service";
 import { UsersQueueService } from "./users-queue.service";
 import { IUser } from "../interfaces/user.interface";
+import { addMinutes } from "../utils/time";
 
 
 export class AuthService {
@@ -19,10 +20,15 @@ export class AuthService {
         try {
             const { code } = registerUserInput;
             const foundOTP: IOTP = (await client.query(`
-                SELECT * FROM otp WHERE code = $1 AND NOW() < sended_time + INTERVAL '1 minute';
+                SELECT * FROM otp WHERE code = $1;
             `, [code])).rows[0];
 
-            if (!foundOTP) throw new UnauthorizedExcaption("Code expired!", ErrorTypes.BAD_USER_INPUT);
+            if (!foundOTP) throw new AuthorizationFailed("Wrong code!", ErrorTypes.BAD_USER_INPUT);
+            if (addMinutes(foundOTP.sended_time, 1) < new Date()) {
+                await OTPService.delete({ telegram_user_id: foundOTP.telegram_user_id });
+                throw new UnauthorizedExcaption("Code expired!", ErrorTypes.BAD_USER_INPUT);
+            }
+            
             if (foundOTP.code === registerUserInput.code) {
                 const userInfo: IUserQueue = await UsersQueueService.deleteUser(foundOTP.telegram_user_id);
                 const deletedOTP: IOTP = await OTPService.delete({ telegram_user_id: userInfo.telegram_user_id }); // delete otp code
