@@ -1,7 +1,7 @@
 import config from "./config"
 
 export class ConfigService {
-    get <T> (name: string): T {
+    static get <T> (name: string): T {
         const names = name.split(".")
         let data = config();
 

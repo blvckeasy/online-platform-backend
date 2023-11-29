@@ -8,7 +8,8 @@ import typeDefs from './schemas'
 import resolvers from './resolvers'
 import { connectDatabase } from './utils/pg';
 import graphqlScalarTypes from './utils/graphql-scalar-types';
-import { GraphQLUpload, } from 'graphql-upload-ts'
+import { GraphQLUpload, graphqlUploadExpress } from 'graphql-upload-ts'
+
 
 async function bootstrap () {
     const app = express();
@@ -23,6 +24,8 @@ async function bootstrap () {
     await connectDatabase();
     await server.start();
 
+
+    app.use(graphqlUploadExpress())
     app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(server, {
         context: ({ req }) => ({ req }) as any,
     }));

@@ -6,6 +6,12 @@ DotEnv.config({
 })
 
 export default () => ({
+    pagination: {
+        coursePagtion: {
+            page: parseInt(process.env.COURSE_PAGINATION_PAGE, 10) || 1,
+            limit: parseInt(process.env.COURSE_PAGINATION_LIMIT, 10) || 12,
+        }
+    },
     serverOptions: {
         PORT: parseInt(process.env.PORT, 10) || 9000,
         HOST: process.env.HOST || "localhost",
