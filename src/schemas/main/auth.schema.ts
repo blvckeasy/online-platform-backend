@@ -9,7 +9,6 @@ export const authTypeDef = `#graphql
 
     input RegisterUserInput {
         fullname: String
-        telegram_user_id: Int!
         code: Int!
     }
 

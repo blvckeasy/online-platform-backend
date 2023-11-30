@@ -4,3 +4,7 @@ export interface ICourse {
     name: string;
     price?: number;
 }
+
+export interface IGetCourse {
+    id: number;
+}

@@ -6,6 +6,12 @@ export interface IGetUsers {
     role: EUserRole,
 }
 
+export interface ISearchUserInput {
+    id?: number;
+    telegram_user_id?: number;
+    contact: string;
+}
+
 export interface ICreateUserInput {
     fullname?: string;
     telegram_user_id: number;

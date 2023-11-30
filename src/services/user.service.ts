@@ -1,15 +1,16 @@
 import { client } from "../utils/pg";
-import JWT from "../utils/jwt";
-import { AlreadyExistsExcaption, BadRequestExcaption, InvalidTokenException, NotFoundException, RequiredParamException } from '../utils/errors';
-import CustomError, { ErrorTypes } from '../utils/error-handler';
-import { ICreateUserInput, IUpdateUserInput, IUser } from '../interfaces/user.interface';
+import { AlreadyExistsExcaption, BadRequestExcaption, NotFoundException } from '../utils/errors';
+import ErrorHandler, { ErrorTypes } from '../utils/error-handler';
+import { ICreateUserInput, ISearchUserInput, IUpdateUserInput, IUser } from '../interfaces/user.interface';
 
 
 export class UserService {
 	static async createUser (createUserInput: ICreateUserInput): Promise<IUser> {
 		try {
 			const { fullname, telegram_user_id, contact } = createUserInput;
-			const user: IUser = await this.findOneWithContact(contact);
+			const user: IUser = await this.findOne({
+                telegram_user_id, contact
+            });
 			
             if (user) throw new AlreadyExistsExcaption("User is already exists", ErrorTypes.BAD_USER_INPUT);
 
@@ -20,9 +21,29 @@ export class UserService {
 			
             return newUser
 		} catch (error) {
-			throw await CustomError(error);
+			throw await ErrorHandler(error);
 		}
 	}
+
+    static async findOne (searchUserInput: ISearchUserInput) {
+        try {
+            const { id, telegram_user_id, contact } = searchUserInput;
+
+            const foundUser: IUser = (await client.query(`
+                SELECT 
+                    *
+                FROM USERS 
+                WHERE
+                    id = CASE WHEN $1 > 0 THEN $1 ELSE -1 END OR
+                    telegram_user_id = CASE WHEN $2 > 0 THEN $2 ELSE -1 END OR
+                    contact = CASE WHEN length($3) > 0 THEN $3 ELSE '' END
+            `, [id, telegram_user_id, contact])).rows[0];
+
+            return foundUser;
+        } catch (error) {
+            throw await ErrorHandler(error);
+        }
+    }
 
 	static async findOneWithID(id: number): Promise<IUser> {
 		try {
@@ -32,7 +53,7 @@ export class UserService {
 		    const foundUser: IUser = result.rows[0];
 		    return foundUser
         } catch (error) {
-            throw await CustomError(error);
+            throw await ErrorHandler(error);
         }
 	}
 
@@ -44,7 +65,7 @@ export class UserService {
 		    const foundUser: IUser = result.rows[0];
 		    return foundUser
         } catch (error) {
-            throw await CustomError(error);
+            throw await ErrorHandler(error);
         }
 	}
 
@@ -68,7 +89,7 @@ export class UserService {
 
             return updatedUser;
         } catch (error) {
-            throw await CustomError(error);
+            throw await ErrorHandler(error);
         }
     }
 
@@ -84,7 +105,7 @@ export class UserService {
             const deletedUser: IUser = result.rows[0];
             return deletedUser;
         } catch (error) {
-            throw await CustomError(error);
+            throw await ErrorHandler(error);
         }
     }
 }

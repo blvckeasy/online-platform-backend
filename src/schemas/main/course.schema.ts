@@ -1,4 +1,8 @@
 export const courseTypeDef = `#graphql
+    input GetCourseInput {
+        id: Int!
+    }
+
     type Course {
         id: Int!
         user_id: Int!
@@ -8,5 +12,12 @@ export const courseTypeDef = `#graphql
 
     type Query {
         getCourses: [Course!]
+    }
+
+    # type GetCourseResponse {
+    # }
+
+    type Mutation {
+        getCourse(getCourseInput: GetCourseInput!): [Course]
     }
 `

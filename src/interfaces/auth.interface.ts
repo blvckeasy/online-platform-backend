@@ -4,5 +4,6 @@ export interface IGenerateCode {
 }
 
 export interface IAuthRegisterUserInput {
+    fullname?: string;
     code: number;
 }

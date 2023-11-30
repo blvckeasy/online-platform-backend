@@ -12,7 +12,7 @@ export const authResvoler: BaseContext = {
     Query: {},
     Mutation: {
         async generateCode (_: any, { createUserQueueInput }: { createUserQueueInput: ICreateUserQueueInput}): Promise<IOTP> {
-            return await AuthService.generateCode(createUserQueueInput)
+            return await AuthService.generateCode(createUserQueueInput);
         },
 
         async register (_: any, { registerUserInput }: { registerUserInput: IAuthRegisterUserInput }, context: any): Promise<IUserResponse> {
