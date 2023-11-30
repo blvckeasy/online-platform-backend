@@ -18,6 +18,6 @@ export const courseTypeDef = `#graphql
     # }
 
     type Mutation {
-        getCourse(getCourseInput: GetCourseInput!): [Course]
+        getCourse(getCourseInput: GetCourseInput!): Course
     }
 `

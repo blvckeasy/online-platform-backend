@@ -23,7 +23,8 @@ export const CourseResolver: BaseContext = {
     },
     Mutation: {
         getCourse: async function (_: undefined, { getCourseInput }: { getCourseInput: IGetCourse }, context: any ) {
-            return await CourseService.getCourse(getCourseInput);
+            const course = await CourseService.getCourse(getCourseInput);
+            return course;
         }
     },
 }

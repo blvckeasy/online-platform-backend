@@ -20,18 +20,9 @@ export class CourseService {
 
     static async getCourse (getCourseInput: IGetCourse) {
         try {
-            const foundCourse: ICourse[] = (await client.query(`
-                SELECT
-                    *
-                FROM courses as c
-                LEFT JOIN course_themes as ct
-                ON c.id = ct.course_id
-                LEFT JOIN course_videos as cv
-                ON ct.id = cv.theme_id
-                WHERE c.id = $1;
-            `, [getCourseInput.id])).rows
-
-            console.log(foundCourse);
+            const foundCourse: any = (await client.query(`
+                SELECT * FROM courses WHERE id = $1;
+            `, [getCourseInput.id])).rows[0];
 
             return foundCourse;
         } catch (error) {

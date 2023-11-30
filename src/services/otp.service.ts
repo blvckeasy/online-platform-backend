@@ -55,6 +55,7 @@ export class OTPService {
 // where the program deletes codes that have passed the code activation state every 1.5 minutes to be able to use them again.
 setInterval(async () => {
     await client.query(`
-        DELETE FROM otp WHERE sended_time + INTERVAL '5 minute' <= NOW();
+    DELETE FROM otp WHERE sended_time + INTERVAL '5 minute' <= NOW();
     `)
+    console.log("ochirildi")
 }, 90000) // 1.5 minute
