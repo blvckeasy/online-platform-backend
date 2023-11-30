@@ -13,16 +13,9 @@ export const CourseResolver: BaseContext = {
 
             return courses;
         },
-
-        // getCourse: async function (_: undefined, __: {}, context: any) {
-        //     const token: string = context.req.headers;
-        //     const user = JWT.verify(token) as IUser;
-
-        //     return 
-        // }
     },
     Mutation: {
-        getCourse: async function (_: undefined, { getCourseInput }: { getCourseInput: IGetCourse }, context: any ) {
+        getCourse: async function (_: undefined, { getCourseInput }: { getCourseInput: IGetCourse }, context: any ): Promise<ICourse[]> {
             const course = await CourseService.getCourse(getCourseInput);
             return course;
         }

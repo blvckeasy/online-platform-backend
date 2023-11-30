@@ -6,5 +6,5 @@ export interface ICourse {
 }
 
 export interface IGetCourse {
-    id: number;
+    id?: number;
 }

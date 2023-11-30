@@ -18,13 +18,18 @@ export class CourseService {
         }
     }
 
-    static async getCourse (getCourseInput: IGetCourse) {
+    static async getCourse (getCourseInput: IGetCourse = {}): Promise<ICourse[]> {
         try {
-            const foundCourse: any = (await client.query(`
-                SELECT * FROM courses WHERE id = $1;
-            `, [getCourseInput.id])).rows[0];
+            const { id } = getCourseInput;
 
-            return foundCourse;
+            const foundCourses: ICourse[] = (await client.query(`
+                SELECT * FROM courses 
+                WHERE 
+                    id = CASE WHEN $1 > 0 THEN $1 ELSE -1 END OR
+                    CASE WHEN $1 IS NULL THEN TRUE ELSE FALSE END;
+            `, [id])).rows;
+
+            return foundCourses;
         } catch (error) {
             throw await ErrorHandler(error);
         }
