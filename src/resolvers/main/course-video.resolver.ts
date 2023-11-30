@@ -7,7 +7,7 @@ import { CourseVideoService } from "../../services/course-video.service";
 export const CourseVideoResolver: BaseContext = {
     Query: {},
     Mutation: {
-        async getCourseVideos (_: any, { getCourseVideosInput }: { getCourseVideosInput: IGetCourseVideosInput }, context: any) {
+        async getCourseVideos (_: any, { getCourseVideosInput }: { getCourseVideosInput: IGetCourseVideosInput }, context: any) {            
             const courseVideos: ICourseVideo[] = await CourseVideoService.getCourseVideos(getCourseVideosInput)
             return courseVideos;
         }

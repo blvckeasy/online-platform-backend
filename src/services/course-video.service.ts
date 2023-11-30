@@ -11,7 +11,7 @@ export class CourseVideoService {
                 WHERE
                     id = CASE WHEN $1 > 0 THEN $1 ELSE -1 END OR
                     theme_id = CASE WHEN $2 > 0 THEN $2 ELSE -1 END OR
-                    true;
+                    CASE WHEN $1 IS NULL AND $2 IS NULL THEN true ELSE false END
             `, [id, theme_id])).rows;
 
             return courseVideos;

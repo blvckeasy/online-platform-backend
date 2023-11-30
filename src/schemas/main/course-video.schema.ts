@@ -1,5 +1,5 @@
 export const courseVideoTypeDef = `#graphql
-    input GetCourseVideoInput {
+    input GetCourseVideosInput {
         id: Int
         video_url: String
         theme_id: Int
@@ -15,7 +15,7 @@ export const courseVideoTypeDef = `#graphql
     }
 
     type Mutation {
-        getCourseVideos (getCourseVideosInput: GetCourseVideoInput): [CourseVideo!]
+        getCourseVideos (getCourseVideosInput: GetCourseVideosInput): [CourseVideo!]
     }
 
 `
