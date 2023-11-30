@@ -15,7 +15,6 @@ export default class CourseThemesModel {
             CREATE TABLE IF NOT EXISTS course_themes (
                 ID SERIAL PRIMARY KEY,
                 COURSE_ID INT NOT NULL REFERENCES courses(id),
-                THUMBNAIL_URL VARCHAR(512) NOT NULL,
                 TITLE VARCHAR(128) NOT NULL,
                 DESCRIPTION VARCHAR(256) NOT NULL
             );
