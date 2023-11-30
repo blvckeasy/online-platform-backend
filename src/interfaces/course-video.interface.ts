@@ -1,4 +1,4 @@
-export interface IGetCourseVideoInput {
+export interface IGetCourseVideosInput {
     id?: number;
     video_url?: string;
     theme_id?: number;

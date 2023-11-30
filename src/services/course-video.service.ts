@@ -1,9 +1,9 @@
-import { ICourseVideo, IGetCourseVideoInput } from "../interfaces/course-video.interface";
+import { ICourseVideo, IGetCourseVideosInput } from "../interfaces/course-video.interface";
 import ErrorHandler from "../utils/error-handler";
 import { client } from "../utils/pg";
 
 export class CourseVideoService {
-    static async getCourseVideos (getCourseVideosInput: IGetCourseVideoInput): Promise<ICourseVideo[]> {
+    static async getCourseVideos (getCourseVideosInput: IGetCourseVideosInput = {}): Promise<ICourseVideo[]> {
         try {
             const { id, theme_id } = getCourseVideosInput;
             const courseVideos: ICourseVideo[] = (await client.query(`
