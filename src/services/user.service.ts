@@ -14,10 +14,9 @@ export class UserService {
 			
             if (user) throw new AlreadyExistsExcaption("User is already exists", ErrorTypes.BAD_USER_INPUT);
 
-			const result = await client.query(`
+			const newUser: IUser = (await client.query(`
 				INSERT INTO users (fullname, telegram_user_id, contact) VALUES ($1, $2, $3) RETURNING *;
-			`, [fullname, telegram_user_id, contact]);
-			const newUser: IUser = result.rows[0];
+			`, [fullname, telegram_user_id, contact])).rows[0];
 			
             return newUser
 		} catch (error) {
