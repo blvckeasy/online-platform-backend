@@ -8,8 +8,8 @@ export class CourseService {
     static async getCourses (pagination?: IPagination): Promise<ICourse[]> {
         try {
             const configPagination: IPagination = ConfigService.get("pagination.coursePagtion");
-            const page = pagination.page || configPagination.page
-            const limit = pagination.limit || configPagination.limit
+            const page = pagination?.page || configPagination.page
+            const limit = pagination?.limit || configPagination.limit
             const offset = page * limit - limit;
 
             const courses: Array<ICourse> = (await client.query(`
@@ -25,8 +25,8 @@ export class CourseService {
     static async getCourse (getCourseInput: IGetCourse = {}, pagination?: IPagination): Promise<ICourse[]> {
         try {
             const configPagination: IPagination = ConfigService.get("pagination.coursePagtion");
-            const page = pagination.page || configPagination.page
-            const limit = pagination.limit || configPagination.limit
+            const page = pagination?.page || configPagination.page
+            const limit = pagination?.limit || configPagination.limit
             const offset = page * limit - limit;
             const { id } = getCourseInput;
 

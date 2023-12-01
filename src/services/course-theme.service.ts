@@ -23,7 +23,7 @@ export class CourseThemeService {
         }
     }
 
-    static async createCourseTheme (createCourseThemeInput: ICreateCourseThemeInput) {
+    static async createCourseTheme (createCourseThemeInput: ICreateCourseThemeInput): Promise<ICourseTheme> {
         try {
             const { course_id, title, description } = createCourseThemeInput;
             const foundCourse = await CourseService.getCourse({ id: course_id });
