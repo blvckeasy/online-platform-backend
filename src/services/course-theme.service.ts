@@ -1,6 +1,8 @@
-import { ICourseTheme, ICourseThemeWithVideos, IGetCourseThemeInput } from "../interfaces/course-theme.interface";
-import ErrorHandler from "../utils/error-handler";
+import { ICourseTheme, ICourseThemeWithVideos, ICreateCourseThemeInput, IGetCourseThemeInput } from "../interfaces/course-theme.interface";
+import ErrorHandler, { ErrorTypes } from "../utils/error-handler";
+import { NotFoundException } from "../utils/errors";
 import { client } from "../utils/pg";
+import { CourseService } from "./course.service";
 
 
 export class CourseThemeService {
@@ -20,4 +22,21 @@ export class CourseThemeService {
             throw await ErrorHandler(error);
         }
     }
+
+    static async createCourseTheme (createCourseThemeInput: ICreateCourseThemeInput) {
+        try {
+            const { course_id, title, description } = createCourseThemeInput;
+            const foundCourse = await CourseService.getCourse({ id: course_id });
+            
+            if (!foundCourse) throw new NotFoundException("Course is not found!", ErrorTypes.NOT_FOUND);
+
+            const newCourseTheme: ICourseTheme = (await client.query(`
+                INSERT INTO course_themes (course_id, title, description) VALUES ($1, $2, $3) RETURNING *;
+            `, [course_id, title, description])).rows[0];
+        
+            return newCourseTheme;
+        } catch (error) {
+            throw await ErrorHandler(error);
+        }
+    } 
 }

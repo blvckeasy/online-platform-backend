@@ -4,6 +4,12 @@ export const courseThemeTypeDef = `#graphql
         course_id: Int
     }
 
+    input CreateCourseThemeInput {
+        course_id: Int!
+        title: String!
+        description: String!
+    }
+
     type CourseTheme {
         id: Int!
         course_id: Int!
@@ -21,5 +27,6 @@ export const courseThemeTypeDef = `#graphql
 
     type Mutation {
         getCourseThemes(getCourseThemeInput: GetCourseThemeInput): [CourseTheme!]
+        createCourseTheme(createCourseThemeInput: CreateCourseThemeInput): [CourseTheme!]
     }
 `
