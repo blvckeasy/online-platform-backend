@@ -14,7 +14,12 @@ export const courseTypeDef = `#graphql
         getCourses: [Course!]
     }
 
+    type GetCourseResponse {
+        course: Course
+        themes: [CourseThemeWithVideo]
+    }
+
     type Mutation {
-        getCourse(getCourseInput: GetCourseInput): [Course!] 
+        getCourse(getCourseInput: GetCourseInput!): GetCourseResponse
     }
 `

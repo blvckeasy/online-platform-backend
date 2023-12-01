@@ -1,13 +1,13 @@
-import { ICourseTheme, IGetCourseThemeInput } from "../interfaces/course-theme.interface";
+import { ICourseTheme, ICourseThemeWithVideos, IGetCourseThemeInput } from "../interfaces/course-theme.interface";
 import ErrorHandler from "../utils/error-handler";
 import { client } from "../utils/pg";
 
 
 export class CourseThemeService {
-    static async getCourseThemes (getCourseThemeInput: IGetCourseThemeInput = {}): Promise<ICourseTheme[]> {
+    static async getCourseThemes (getCourseThemeInput: IGetCourseThemeInput = {}): Promise<ICourseThemeWithVideos[]> {
         try {
             const { id, course_id } = getCourseThemeInput;
-            const courseThemes: ICourseTheme[] = (await client.query(`
+            const courseThemes: ICourseThemeWithVideos[] = (await client.query(`
                 SELECT * FROM course_themes
                 WHERE
                     id = CASE WHEN $1 > 0 THEN $1 ELSE -1 END OR

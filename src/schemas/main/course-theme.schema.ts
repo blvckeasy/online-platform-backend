@@ -11,6 +11,14 @@ export const courseThemeTypeDef = `#graphql
         description: String!
     }
 
+    type CourseThemeWithVideo {
+        id: Int!
+        course_id: Int!
+        title: String!
+        description: String!
+        videos: [CourseVideo]
+    }
+
     type Mutation {
         getCourseThemes(getCourseThemeInput: GetCourseThemeInput): [CourseTheme!]
     }

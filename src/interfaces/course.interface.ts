@@ -1,3 +1,6 @@
+import { ICourseThemeWithVideos } from "./course-theme.interface";
+
+
 export interface ICourse {
     id: number;
     user_id: number;
@@ -7,4 +10,9 @@ export interface ICourse {
 
 export interface IGetCourse {
     id?: number;
+}
+
+export interface IGetCourseResponse {
+    course: ICourse,
+    themes?: [ICourseThemeWithVideos]
 }
