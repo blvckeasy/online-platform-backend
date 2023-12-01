@@ -42,7 +42,7 @@ export default async function ErrorHandler (error: ErrorStructure) {
 
 
     errorNames.forEach((name) => {
-        if (name === errorInstance) {
+        if (name === errorInstance && name !== "InternalServerError") {
             throw new GraphQLError(errorMessage, {
                 extensions: {
                     code: errorType.errorCode,

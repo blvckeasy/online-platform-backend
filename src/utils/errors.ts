@@ -16,6 +16,8 @@ export class ErrorStructure extends Error {
     }
 }
 
+export class InternalServerError extends ErrorStructure {}
+
 export class UnauthorizedExcaption extends ErrorStructure {}
 
 export class AlreadyExistsExcaption extends ErrorStructure {}

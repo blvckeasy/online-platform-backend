@@ -1,5 +1,5 @@
 import { client } from "../utils/pg";
-import { AlreadyExistsExcaption, BadRequestExcaption, NotFoundException } from '../utils/errors';
+import { AlreadyExistsExcaption, BadRequestExcaption, InternalServerError, NotFoundException } from '../utils/errors';
 import ErrorHandler, { ErrorTypes } from '../utils/error-handler';
 import { ICreateUserInput, ISearchUserInput, IUpdateUserInput, IUser } from '../interfaces/user.interface';
 
@@ -24,9 +24,11 @@ export class UserService {
 		}
 	}
 
-    static async findOne (searchUserInput: ISearchUserInput) {
+    static async findOne (searchUserInput: ISearchUserInput): Promise<IUser> {
         try {
             const { id, telegram_user_id, contact } = searchUserInput;
+
+            if (!searchUserInput) throw new InternalServerError("searchUserInput is require!", ErrorTypes.INTERNAL_SERVER_ERROR)
 
             const foundUser: IUser = (await client.query(`
                 SELECT 

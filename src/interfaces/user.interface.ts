@@ -9,7 +9,7 @@ export interface IGetUsers {
 export interface ISearchUserInput {
     id?: number;
     telegram_user_id?: number;
-    contact: string;
+    contact?: string;
 }
 
 export interface ICreateUserInput {

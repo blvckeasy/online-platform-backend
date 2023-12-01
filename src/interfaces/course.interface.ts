@@ -1,4 +1,5 @@
 import { ICourseThemeWithVideos } from "./course-theme.interface";
+import { IUser } from "./user.interface";
 
 
 export interface ICourse {
@@ -6,6 +7,11 @@ export interface ICourse {
     user_id: number;
     name: string;
     price?: number;
+}
+
+export interface ICourseWithUser {
+    course: ICourse;
+    author: IUser;
 }
 
 export interface IGetCourse {

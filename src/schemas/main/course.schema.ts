@@ -10,13 +10,18 @@ export const courseTypeDef = `#graphql
         price: Float
     }
 
-    type Query {
-        getCourses: [Course!]
+    type CourseWithUser {
+        course: Course!
+        author: User!
     }
 
     type GetCourseResponse {
         course: Course
         themes: [CourseThemeWithVideo]
+    }
+
+    type Query {
+        getCourses: [CourseWithUser!]
     }
 
     type Mutation {
