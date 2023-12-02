@@ -8,6 +8,7 @@ import { CourseService } from "../../services/course.service";
 import { ICourse } from "../../interfaces/course.interface";
 import { IUser } from "../../interfaces/user.interface";
 
+
 export const CourseThemeResolver: BaseContext = {
     Query: {},
     Mutation: {
@@ -18,14 +19,9 @@ export const CourseThemeResolver: BaseContext = {
             const user: IUser = JWT.verify(token) as IUser;
             const course: ICourse = (await CourseService.getCourse({ id: createCourseThemeInput.course_id }))[0];
 
-            console.log("user:", user);
-            console.log("course:", course);
-
             if (course?.user_id != user.id) throw new BadRequestExcaption("You do not have permission to change this course!", ErrorTypes.BAD_REQUEST)
 
             const newCourseTheme: ICourseTheme = await CourseThemeService.createCourseTheme(createCourseThemeInput);
-
-            console.log("newCourseTheme:", newCourseTheme);
             return newCourseTheme;
         },
         getCourseThemes: async (_: any, { getCourseThemeInput }: { getCourseThemeInput: IGetCourseThemeInput }, context: any): Promise<ICourseTheme[]> => {
