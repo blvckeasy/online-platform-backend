@@ -12,3 +12,10 @@ export interface ICourseVideo {
     title: string;
     uploaded_at: Date;
 }
+
+export interface IPostCourseVideoInput {
+    thumbnail_url: string;
+    video_url: string;
+    theme_id: number;
+    title: string;
+}

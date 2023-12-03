@@ -8,6 +8,7 @@ import typeDefs from './graphql/schemas'
 import resolvers from './graphql/resolvers'
 import { connectDatabase } from './utils/pg';
 import graphqlScalarTypes from './utils/graphql-scalar-types';
+import Routes from './api/routes'
 
 
 async function bootstrap () {
@@ -22,12 +23,13 @@ async function bootstrap () {
 
     await connectDatabase();
     await server.start();
-
-
+    
+    await Routes(app);
     
     app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(server, {
         context: ({ req }) => ({ req }) as any,
     }));
+
 
     app.get("/api/helloworld", (req, res) => {
         res.send("hello world")

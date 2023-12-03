@@ -17,44 +17,40 @@ export class AuthService {
     }
 
     static async register (registerUserInput: IAuthRegisterUserInput): Promise<IUser> {
-        try {
-            const { code } = registerUserInput;
-            const foundOTP: IOTP = (await client.query(`
-                SELECT * FROM otp WHERE code = $1;
-            `, [code])).rows[0];
+        const { code } = registerUserInput;
+        const foundOTP: IOTP = (await client.query(`
+            SELECT * FROM otp WHERE code = $1;
+        `, [code])).rows[0];
 
-            if (!foundOTP) throw new AuthorizationFailed("Wrong code!", ErrorTypes.BAD_USER_INPUT);
-            if (addMinutes(foundOTP.sended_time, 1) < new Date()) {
-                await OTPService.delete({ telegram_user_id: foundOTP.telegram_user_id });
-                throw new UnauthorizedExcaption("Code expired!", ErrorTypes.BAD_USER_INPUT);
-            }
-            
-            if (foundOTP.code === registerUserInput.code) {
-                const userInfo: IUserQueue = await UsersQueueService.deleteUser(foundOTP.telegram_user_id);
-                
-                await OTPService.delete({ telegram_user_id: userInfo.telegram_user_id }); // delete otp code
-                
-                const foundUser: IUser = await UserService.findOne({
-                    telegram_user_id: userInfo.telegram_user_id, 
-                    contact: userInfo.contact
-                });
-                
-
-                if (!foundUser) {
-                    const newUser: IUser = await UserService.createUser({
-                        telegram_user_id: userInfo.telegram_user_id,
-                        contact: userInfo.contact,
-                        fullname: userInfo.fullname,
-                        role: userInfo.role
-                    })
-                    return newUser;
-                }
-                return foundUser
-            }
-
-            throw new AuthorizationFailed("Wrong code!", ErrorTypes.BAD_USER_INPUT);
-        } catch (error) {
-            throw await CustomError(error);
+        if (!foundOTP) throw new AuthorizationFailed("Wrong code!", ErrorTypes.BAD_USER_INPUT);
+        if (addMinutes(foundOTP.sended_time, 1) < new Date()) {
+            await OTPService.delete({ telegram_user_id: foundOTP.telegram_user_id });
+            throw new UnauthorizedExcaption("Code expired!", ErrorTypes.BAD_USER_INPUT);
         }
+        
+        if (foundOTP.code === registerUserInput.code) {
+            const userInfo: IUserQueue = await UsersQueueService.deleteUser(foundOTP.telegram_user_id);
+            
+            await OTPService.delete({ telegram_user_id: userInfo.telegram_user_id }); // delete otp code
+            
+            const foundUser: IUser = await UserService.findOne({
+                telegram_user_id: userInfo.telegram_user_id, 
+                contact: userInfo.contact
+            });
+            
+
+            if (!foundUser) {
+                const newUser: IUser = await UserService.createUser({
+                    telegram_user_id: userInfo.telegram_user_id,
+                    contact: userInfo.contact,
+                    fullname: userInfo.fullname,
+                    role: userInfo.role
+                })
+                return newUser;
+            }
+            return foundUser
+        }
+
+        throw new AuthorizationFailed("Wrong code!", ErrorTypes.BAD_USER_INPUT);
     }
 }

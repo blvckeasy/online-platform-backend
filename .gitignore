@@ -4,3 +4,4 @@ node_modules
 !.example.env
 
 task.txt
+./uploads/*
