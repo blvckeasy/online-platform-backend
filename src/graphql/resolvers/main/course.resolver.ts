@@ -1,14 +1,14 @@
 import { BaseContext } from "@apollo/server";
-import { ICourse, ICourseWithUser, IGetCourse, IGetCourseResponse } from "../../interfaces/course.interface";
-import { CourseService } from "../../services/course.service";
-import { CourseThemeService } from "../../services/course-theme.service";
-import { NotFoundException } from "../../utils/errors";
-import { ErrorTypes } from "../../utils/error-handler";
-import { IPagination } from "../../interfaces/config.interface";
-import { ICourseThemeWithVideos } from "../../interfaces/course-theme.interface";
-import { CourseVideoService } from "../../services/course-video.service";
-import { UserService } from "../../services/user.service";
-import { IUser } from "../../interfaces/user.interface";
+import { ICourse, ICourseWithUser, IGetCourse, IGetCourseResponse } from "../../../interfaces/course.interface";
+import { CourseService } from "../../../services/course.service";
+import { CourseThemeService } from "../../../services/course-theme.service";
+import { NotFoundException } from "../../../utils/errors";
+import { ErrorTypes } from "../../../utils/error-handler";
+import { IPagination } from "../../../interfaces/config.interface";
+import { ICourseThemeWithVideos } from "../../../interfaces/course-theme.interface";
+import { CourseVideoService } from "../../../services/course-video.service";
+import { UserService } from "../../../services/user.service";
+import { IUser } from "../../../interfaces/user.interface";
 
 
 export const CourseResolver: BaseContext = {

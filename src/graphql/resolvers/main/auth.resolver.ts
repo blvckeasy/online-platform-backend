@@ -1,11 +1,11 @@
 import { BaseContext } from "@apollo/server";
-import { ICreateUserQueueInput } from '../../interfaces/users-queue.interface'
-import { IAuthRegisterUserInput } from '../../interfaces/auth.interface'
-import { IOTP } from '../../interfaces/otp.interface';
-import { AuthService } from "../../services/auth.service";
-import { IUser, IUserResponse } from "../../interfaces/user.interface";
+import { ICreateUserQueueInput } from '../../../interfaces/users-queue.interface'
+import { IAuthRegisterUserInput } from '../../../interfaces/auth.interface'
+import { IOTP } from '../../../interfaces/otp.interface';
+import { AuthService } from "../../../services/auth.service";
+import { IUser, IUserResponse } from "../../../interfaces/user.interface";
 import { Request } from "express";
-import JWT from "../../utils/jwt";
+import JWT from "../../../utils/jwt";
 
 
 export const authResvoler: BaseContext = {

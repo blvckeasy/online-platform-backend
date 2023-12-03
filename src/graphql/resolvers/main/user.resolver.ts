@@ -1,10 +1,10 @@
 import { BaseContext } from "@apollo/server";
-import { ICreateUserInput, IUpdateUserInput, IUser, IUserResponse } from "../../interfaces/user.interface";
-import { UserService } from "../../services/user.service";
+import { ICreateUserInput, IUpdateUserInput, IUser, IUserResponse } from "../../../interfaces/user.interface";
+import { UserService } from "../../../services/user.service";
 import { Request } from "express";
-import JWT from "../../utils/jwt";
-import { InvalidTokenException, RequiredParamException } from "../../utils/errors";
-import { ErrorTypes } from "../../utils/error-handler";
+import JWT from "../../../utils/jwt";
+import { InvalidTokenException, RequiredParamException } from "../../../utils/errors";
+import { ErrorTypes } from "../../../utils/error-handler";
 
 
 export const userResolver: BaseContext = {

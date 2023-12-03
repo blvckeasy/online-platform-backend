@@ -1,12 +1,12 @@
 import { BaseContext } from "@apollo/server";
-import { ICourseTheme, ICreateCourseThemeInput, IGetCourseThemeInput } from "../../interfaces/course-theme.interface";
-import { CourseThemeService } from "../../services/course-theme.service";
-import JWT from "../../utils/jwt";
-import { BadRequestExcaption, NotFoundException } from "../../utils/errors";
-import { ErrorTypes } from "../../utils/error-handler";
-import { CourseService } from "../../services/course.service";
-import { ICourse } from "../../interfaces/course.interface";
-import { IUser } from "../../interfaces/user.interface";
+import { ICourseTheme, ICreateCourseThemeInput, IGetCourseThemeInput } from "../../../interfaces/course-theme.interface";
+import { CourseThemeService } from "../../../services/course-theme.service";
+import JWT from "../../../utils/jwt";
+import { BadRequestExcaption, NotFoundException } from "../../../utils/errors";
+import { ErrorTypes } from "../../../utils/error-handler";
+import { CourseService } from "../../../services/course.service";
+import { ICourse } from "../../../interfaces/course.interface";
+import { IUser } from "../../../interfaces/user.interface";
 
 
 export const CourseThemeResolver: BaseContext = {

@@ -4,11 +4,10 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import typeDefs from './schemas'
-import resolvers from './resolvers'
+import typeDefs from './graphql/schemas'
+import resolvers from './graphql/resolvers'
 import { connectDatabase } from './utils/pg';
 import graphqlScalarTypes from './utils/graphql-scalar-types';
-import { GraphQLUpload, graphqlUploadExpress } from 'graphql-upload-ts'
 
 
 async function bootstrap () {
@@ -25,11 +24,11 @@ async function bootstrap () {
     await server.start();
 
 
-    app.use(graphqlUploadExpress())
+    
     app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(server, {
         context: ({ req }) => ({ req }) as any,
     }));
-    
+
     app.get("/api/helloworld", (req, res) => {
         res.send("hello world")
     })
