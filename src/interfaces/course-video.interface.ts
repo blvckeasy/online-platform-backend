@@ -19,3 +19,8 @@ export interface IPostCourseVideoInput {
     theme_id: number;
     title: string;
 }
+
+export interface IUpdateCourseVideoInput {
+    course_video_id: number;
+    title?: string;
+}

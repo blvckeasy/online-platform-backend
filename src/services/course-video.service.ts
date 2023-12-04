@@ -1,4 +1,4 @@
-import { ICourseVideo, IGetCourseVideosInput, IPostCourseVideoInput } from "../interfaces/course-video.interface";
+import { ICourseVideo, IGetCourseVideosInput, IPostCourseVideoInput, IUpdateCourseVideoInput } from "../interfaces/course-video.interface";
 import { client } from "../utils/pg";
 
 
@@ -25,5 +25,19 @@ export class CourseVideoService {
         `, [id, theme_id])).rows;
 
         return courseVideos;
+    }
+
+    static async updateCourseVideo (updateCourseVideoInput: IUpdateCourseVideoInput): Promise<ICourseVideo> {
+        const { course_video_id, title } = updateCourseVideoInput
+        const updatedCourseVideo: ICourseVideo = (await client.query(`
+            UPDATE COURSE_VIDEOS
+            SET
+                title = CASE WHEN length($1) > 0 THEN $1 ELSE title END
+            WHERE
+                id = $2
+            RETURNING *;
+        `, [title, course_video_id])).rows[0];
+
+        return updatedCourseVideo;
     }
 }

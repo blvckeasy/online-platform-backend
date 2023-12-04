@@ -4,6 +4,11 @@ export const courseVideoTypeDef = `#graphql
         video_url: String
         theme_id: Int
     }
+
+    input updateCourseVideoInput {
+        course_video_id: Int!
+        title: String
+    }
     
     type CourseVideo {
         id: Int!
@@ -14,8 +19,10 @@ export const courseVideoTypeDef = `#graphql
         uploaded_at: DateTime
     }
 
+
     type Mutation {
         getCourseVideos (getCourseVideosInput: GetCourseVideosInput): [CourseVideo!]
+        updateCourseVideo (updateCourseVideoInput: updateCourseVideoInput!): CourseVideo!
     }
 
 `
