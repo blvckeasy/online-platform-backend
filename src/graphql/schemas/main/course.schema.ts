@@ -3,6 +3,11 @@ export const courseTypeDef = `#graphql
         id: Int!
     }
 
+    input CreateCourseInput {
+        name: String!
+        price: Float
+    }
+
     type Course {
         id: Int!
         user_id: Int!
@@ -25,6 +30,7 @@ export const courseTypeDef = `#graphql
     }
 
     type Mutation {
-        getCourse(getCourseInput: GetCourseInput!): GetCourseResponse
+        createCourse(createCourseInput: CreateCourseInput): Course!
+        getCourse(getCourseInput: GetCourseInput!): GetCourseResponse!
     }
 `

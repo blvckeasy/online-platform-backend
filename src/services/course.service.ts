@@ -1,6 +1,6 @@
 import { ConfigService } from "../config/config.service";
 import { IPagination } from "../interfaces/config.interface";
-import { ICourse, IGetCourse } from "../interfaces/course.interface";
+import { ICourse, ICreateCourseInput, IGetCourse } from "../interfaces/course.interface";
 import { client } from "../utils/pg";
 
 export class CourseService {
@@ -34,5 +34,15 @@ export class CourseService {
         `, [id, offset, limit])).rows;
 
         return foundCourses;
+    }
+
+    static async createCourse (user_id: number, createCourseInput: ICreateCourseInput): Promise<ICourse> {
+        const { name, price } = createCourseInput;
+
+        const newCourse: ICourse = (await client.query(`
+            INERT INTO COURSES (user_id, name, price) VALUES ($1, $2, $3, $4) RETURNING *;
+        `, [user_id, name, price])).rows[0];
+
+        return newCourse;
     }
 }

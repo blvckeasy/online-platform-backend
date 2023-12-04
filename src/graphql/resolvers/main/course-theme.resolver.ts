@@ -20,6 +20,7 @@ export const CourseThemeResolver: BaseContext = {
                 const user: IUser = JWT.verify(token) as IUser;
                 const course: ICourse = (await CourseService.getSearchCourses({ id: createCourseThemeInput.course_id }))[0];
     
+                if (!course) throw new NotFoundException("Course is not found!", ErrorTypes.NOT_FOUND);
                 if (course?.user_id != user.id) throw new BadRequestExcaption("You do not have permission to change this course!", ErrorTypes.BAD_REQUEST)
     
                 const newCourseTheme: ICourseTheme = await CourseThemeService.createCourseTheme(createCourseThemeInput);

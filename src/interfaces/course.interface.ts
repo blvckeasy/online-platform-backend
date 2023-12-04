@@ -22,3 +22,8 @@ export interface IGetCourseResponse {
     course: ICourse,
     themes?: [ICourseThemeWithVideos]
 }
+
+export interface ICreateCourseInput {
+    name: string;
+    price?: number;
+}

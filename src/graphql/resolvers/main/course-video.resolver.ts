@@ -10,6 +10,7 @@ import { CourseThemeService } from "../../../services/course-theme.service";
 import { CourseService } from "../../../services/course.service";
 import { ICourse } from "../../../interfaces/course.interface";
 import { IUser } from "../../../interfaces/user.interface";
+import { UserService } from "../../../services/user.service";
 
 
 export const CourseVideoResolver: BaseContext = {
@@ -28,6 +29,9 @@ export const CourseVideoResolver: BaseContext = {
                 const token: string = context.req.headers.token;
                 const user = JWT.verify(token) as IUser;
                 
+                const foundUser: IUser = (await UserService.findOne({ id: user.id }));
+                if (!foundUser) throw new NotFoundException("User not found", ErrorTypes.NOT_FOUND);
+
                 const foundCourseVideo: ICourseVideo = (await CourseVideoService.getCourseVideos({ id: updateCourseVideoInput.course_video_id }))[0];
                 if (!foundCourseVideo) throw new NotFoundException("Video is not found!", ErrorTypes.NOT_FOUND);
 
@@ -49,7 +53,10 @@ export const CourseVideoResolver: BaseContext = {
             try {
                 const token: string = context.req.headers.token;
                 const user = JWT.verify(token) as IUser;
-                
+
+                const foundUser: IUser = (await UserService.findOne({ id: user.id }));
+                if (!foundUser) throw new NotFoundException("User not found", ErrorTypes.NOT_FOUND);
+
                 const foundCourseVideo: ICourseVideo = (await CourseVideoService.getCourseVideos({ id: deleteCourseVideoInput.id }))[0];
                 if (!foundCourseVideo) throw new NotFoundException("Video is not found!", ErrorTypes.NOT_FOUND);
 

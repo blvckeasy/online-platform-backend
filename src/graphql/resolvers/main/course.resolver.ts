@@ -1,14 +1,15 @@
 import { BaseContext } from "@apollo/server";
-import { ICourse, ICourseWithUser, IGetCourse, IGetCourseResponse } from "../../../interfaces/course.interface";
+import { ICourse, ICourseWithUser, ICreateCourseInput, IGetCourse, IGetCourseResponse } from "../../../interfaces/course.interface";
 import { CourseService } from "../../../services/course.service";
 import { CourseThemeService } from "../../../services/course-theme.service";
-import { NotFoundException } from "../../../utils/errors";
+import { BadGatewayExcaption, NotFoundException } from "../../../utils/errors";
 import ErrorHandler, { ErrorTypes } from "../../../utils/error-handler";
 import { IPagination } from "../../../interfaces/config.interface";
 import { ICourseThemeWithVideos } from "../../../interfaces/course-theme.interface";
 import { CourseVideoService } from "../../../services/course-video.service";
 import { UserService } from "../../../services/user.service";
 import { IUser } from "../../../interfaces/user.interface";
+import JWT from "../../../utils/jwt";
 
 
 export const CourseResolver: BaseContext = {
@@ -32,7 +33,7 @@ export const CourseResolver: BaseContext = {
         },
     },
     Mutation: {
-        getCourse: async function (_: undefined, { getCourseInput }: { getCourseInput: IGetCourse }, context: any ): Promise<IGetCourseResponse> {
+        getCourse: async function (_: any, { getCourseInput }: { getCourseInput: IGetCourse }, context: any ): Promise<IGetCourseResponse> {
             try {
                 const { page, limit }: IPagination = context.req.query;
                 const course: ICourse = (await CourseService.getSearchCourses(getCourseInput, { page, limit }))[0];
@@ -51,7 +52,22 @@ export const CourseResolver: BaseContext = {
             } catch (error) {
                 throw await ErrorHandler(error);
             }
-        }
+        },
+        createCourse: async function (_: any, { createCourseInput }: { createCourseInput: ICreateCourseInput }, context: any) {
+            try {
+                const token: string = context.req.headers.token;
+                const user = JWT.verify(token) as IUser;
 
+                const foundUser: IUser = await UserService.findOne({ id: user.id });
+                if (!foundUser) throw new NotFoundException("User is not found!", ErrorTypes.NOT_FOUND);
+
+                if (!["admin", "teacher"].includes(foundUser.role)) throw new BadGatewayExcaption("Only admin or teacher create the course!", ErrorTypes.BAD_REQUEST);
+
+                const newCourse: ICourse = await CourseService.createCourse(foundUser.id, createCourseInput);
+                return newCourse;
+            } catch (error) {
+                throw await ErrorHandler(error);
+            }
+        }
     },
 }
