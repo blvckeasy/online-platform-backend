@@ -1,10 +1,16 @@
 import { ICourseVideo, IGetCourseVideosInput, IPostCourseVideoInput } from "../interfaces/course-video.interface";
-import ErrorHandler from "../utils/error-handler";
 import { client } from "../utils/pg";
+
 
 export class CourseVideoService {
     static async postCourseVideo (postCourseVideoInput: IPostCourseVideoInput): Promise<ICourseVideo> {
-        const {  }
+        const { thumbnail_url, video_url, theme_id, title } = postCourseVideoInput;
+
+        const newCourseVideo: ICourseVideo = (await client.query(`
+            INSERT INTO COURSE_VIDEOS (thumbnail_url, video_url, theme_id, title) VALUES ($1, $2, $3, $4) RETURNING *;
+        `, [thumbnail_url, video_url, theme_id, title])).rows[0];
+
+        return newCourseVideo;
     }
 
     static async getCourseVideos (getCourseVideosInput: IGetCourseVideosInput = {}): Promise<ICourseVideo[]> {

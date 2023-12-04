@@ -1,5 +1,4 @@
 import { ICreateOTPinput, IDeleteOTPinput, IOTP } from "../interfaces/otp.interface";
-import ErrorHandler from "../utils/error-handler";
 import { generateRandomNumber } from "../utils/generate-code";
 import { client } from "../utils/pg";
 import { UsersQueueService } from "./users-queue.service";

@@ -2,7 +2,7 @@ import { IAuthRegisterUserInput } from "../interfaces/auth.interface";
 import { IOTP } from "../interfaces/otp.interface";
 import { ICreateUserQueueInput, IUserQueue } from "../interfaces/users-queue.interface";
 import { OTPService } from "./otp.service";
-import CustomError, { ErrorTypes } from '../utils/error-handler'
+import { ErrorTypes } from '../utils/error-handler'
 import { client } from "../utils/pg";
 import { AuthorizationFailed, UnauthorizedExcaption } from "../utils/errors";
 import { UserService } from "./user.service";

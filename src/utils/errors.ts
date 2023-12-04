@@ -31,3 +31,5 @@ export class RequiredParamException extends ErrorStructure {}
 export class BadRequestExcaption extends ErrorStructure {}
 
 export class AuthorizationFailed extends ErrorStructure {}
+
+export class BadGatewayExcaption extends ErrorStructure {}

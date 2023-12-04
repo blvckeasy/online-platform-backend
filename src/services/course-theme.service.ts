@@ -1,5 +1,5 @@
 import { ICourseTheme, ICourseThemeWithVideos, ICreateCourseThemeInput, IGetCourseThemeInput } from "../interfaces/course-theme.interface";
-import ErrorHandler, { ErrorTypes } from "../utils/error-handler";
+import { ErrorTypes } from "../utils/error-handler";
 import { NotFoundException } from "../utils/errors";
 import { client } from "../utils/pg";
 import { CourseService } from "./course.service";
@@ -21,7 +21,7 @@ export class CourseThemeService {
 
     static async createCourseTheme (createCourseThemeInput: ICreateCourseThemeInput): Promise<ICourseTheme> {
         const { course_id, title, description } = createCourseThemeInput;
-        const foundCourse = await CourseService.getCourse({ id: course_id });
+        const foundCourse = await CourseService.getSearchCourses({ id: course_id });
         
         if (!foundCourse) throw new NotFoundException("Course is not found!", ErrorTypes.NOT_FOUND);
 

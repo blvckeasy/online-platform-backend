@@ -1,6 +1,5 @@
 import { ICreateUserQueueInput, IUserQueue } from "../interfaces/users-queue.interface";
 import { client } from "../utils/pg";
-import ErrorHandler from '../utils/error-handler';
 
 
 export class UsersQueueService {

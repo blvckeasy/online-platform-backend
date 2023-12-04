@@ -35,7 +35,7 @@ export const CourseResolver: BaseContext = {
         getCourse: async function (_: undefined, { getCourseInput }: { getCourseInput: IGetCourse }, context: any ): Promise<IGetCourseResponse> {
             try {
                 const { page, limit }: IPagination = context.req.query;
-                const course: ICourse = (await CourseService.getCourse(getCourseInput, { page, limit }))[0];
+                const course: ICourse = (await CourseService.getSearchCourses(getCourseInput, { page, limit }))[0];
              
                 if (!course) throw new NotFoundException("Course is not found!", ErrorTypes.NOT_FOUND);   
                 const foundThemes: ICourseThemeWithVideos[] = await CourseThemeService.getCourseThemes({course_id: course.id});

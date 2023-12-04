@@ -1,7 +1,6 @@
 import { ConfigService } from "../config/config.service";
 import { IPagination } from "../interfaces/config.interface";
 import { ICourse, IGetCourse } from "../interfaces/course.interface";
-import ErrorHandler from "../utils/error-handler";
 import { client } from "../utils/pg";
 
 export class CourseService {
@@ -18,7 +17,7 @@ export class CourseService {
         return courses;
     }
 
-    static async getCourse (getCourseInput: IGetCourse = {}, pagination?: IPagination): Promise<ICourse[]> {
+    static async getSearchCourses (getCourseInput: IGetCourse = {}, pagination?: IPagination): Promise<ICourse[]> {
         const configPagination: IPagination = ConfigService.get("pagination.coursePagtion");
         const page = pagination?.page || configPagination.page
         const limit = pagination?.limit || configPagination.limit

@@ -1,6 +1,6 @@
 import { client } from "../utils/pg";
 import { AlreadyExistsExcaption, BadRequestExcaption, InternalServerError, NotFoundException } from '../utils/errors';
-import ErrorHandler, { ErrorTypes } from '../utils/error-handler';
+import { ErrorTypes } from '../utils/error-handler';
 import { ICreateUserInput, ISearchUserInput, IUpdateUserInput, IUser } from '../interfaces/user.interface';
 
 
