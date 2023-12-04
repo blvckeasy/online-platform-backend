@@ -24,3 +24,7 @@ export interface IUpdateCourseVideoInput {
     course_video_id: number;
     title?: string;
 }
+
+export interface IDeleteCourseVideoInput {
+    id: number;
+}
