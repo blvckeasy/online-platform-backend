@@ -1,7 +1,7 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import http from 'http';
 import cors from 'cors';
 import typeDefs from './graphql/schemas'
@@ -26,13 +26,22 @@ async function bootstrap () {
     
     await Routes(app);
     
-    app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(server, {
+    app.use(cors<cors.CorsRequest>({
+        origin: "*",
+        methods: ["GET", "POST", "PATCH", "DELETE"],
+    }))
+
+    app.use('/graphql', express.json(), expressMiddleware(server, {
         context: ({ req }) => ({ req }) as any,
     }));
 
 
     app.get("/api/helloworld", (req, res) => {
         res.send("hello world")
+    })
+
+    app.use(async (error: Error, req: Request, res: Response, next: NextFunction) => {
+        console.log("Rest api error handler")
     })
 
     httpServer.listen({ port: 4000 });

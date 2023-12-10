@@ -23,5 +23,8 @@ export default () => ({
         database: process.env.DB_NAME,
         password: process.env.DB_PASSWORD,
         connectionString: process.env.DB_CONNECTION_STRING
+    },
+    botConfig: {
+        token: process.env.BOT_TOKEN
     }
 })
