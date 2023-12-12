@@ -9,9 +9,12 @@ import resolvers from './graphql/resolvers'
 import { connectDatabase } from './utils/pg';
 import graphqlScalarTypes from './utils/graphql-scalar-types';
 import Routes from './api/routes'
+import { ConfigService } from './config/config.service';
 
 
 async function bootstrap () {
+    const PORT = ConfigService.get<number>("serverOptions.PORT");
+
     const app = express();
     const httpServer = http.createServer(app);
 
@@ -44,8 +47,8 @@ async function bootstrap () {
         console.log("Rest api error handler")
     })
 
-    httpServer.listen({ port: 4000 });
-    console.log(`🚀 Server ready at http://localhost:4000`);
+    httpServer.listen({ port: PORT });
+    console.log(`🚀 Server ready at http://localhost:${PORT}`);
 }
 
 bootstrap();

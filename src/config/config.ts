@@ -13,8 +13,9 @@ export default () => ({
         }
     },
     serverOptions: {
-        PORT: parseInt(process.env.PORT, 10) || 9000,
-        HOST: process.env.HOST || "localhost",
+        PORT: parseInt(process.env.SERVER_PORT, 10) || 9000,
+        HOST: process.env.SERVER_HOST || "localhost",
+        PROTOCOL: process.env.SERVER_PROTOCOL || "http",
     },
     databaseConfig: {
         host: process.env.DB_HOST || "locahost",
@@ -26,5 +27,5 @@ export default () => ({
     },
     botConfig: {
         token: process.env.BOT_TOKEN
-    }
+    },
 })
