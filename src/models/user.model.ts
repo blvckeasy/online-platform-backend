@@ -14,10 +14,10 @@ export default class UserModel {
     }
 
     #createTableIfNotExists () {
-        this.client.query(`
+        this.client.query(`            
             CREATE TABLE IF NOT EXISTS users (
                 ID SERIAL PRIMARY KEY,
-                FULLNAME VARCHAR(64) NOT NULL,
+                FULLNAME VARCHAR(64) DEFAULT 'student',
                 TELEGRAM_USER_ID INT NOT NULL UNIQUE,
                 CONTACT VARCHAR(32) NOT NULL UNIQUE,
                 ROLE user_role DEFAULT 'student', 

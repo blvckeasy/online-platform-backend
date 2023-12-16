@@ -1,6 +1,8 @@
 import { ConfigService } from "../config/config.service";
 import { IPagination } from "../interfaces/config.interface";
 import { ICourse, ICreateCourseInput, IGetCourse } from "../interfaces/course.interface";
+import { ErrorTypes } from "../utils/error-handler";
+import { NotFoundException } from "../utils/errors";
 import { client } from "../utils/pg";
 
 export class CourseService {
@@ -37,11 +39,12 @@ export class CourseService {
     }
 
     static async createCourse (user_id: number, createCourseInput: ICreateCourseInput): Promise<ICourse> {
-        const { name, price } = createCourseInput;
+        const { title, price, thumbnail_url } = createCourseInput;
+        if (!title) throw new NotFoundException("Video title is required!", ErrorTypes.NOT_FOUND);
 
         const newCourse: ICourse = (await client.query(`
-            INERT INTO COURSES (user_id, name, price) VALUES ($1, $2, $3, $4) RETURNING *;
-        `, [user_id, name, price])).rows[0];
+            INSERT INTO COURSES (user_id, thumbnail_url, title, price) VALUES ($1, $2, $3, $4) RETURNING *;
+        `, [user_id, thumbnail_url, title, price])).rows[0];
 
         return newCourse;
     }

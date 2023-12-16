@@ -52,22 +52,6 @@ export const CourseResolver: BaseContext = {
             } catch (error) {
                 throw await ErrorHandler(error);
             }
-        },
-        createCourse: async function (_: any, { createCourseInput }: { createCourseInput: ICreateCourseInput }, context: any) {
-            try {
-                const token: string = context.req.headers.token;
-                const user = JWT.verify(token) as IUser;
-
-                const foundUser: IUser = await UserService.findOne({ id: user.id });
-                if (!foundUser) throw new NotFoundException("User is not found!", ErrorTypes.NOT_FOUND);
-
-                if (!["admin", "teacher"].includes(foundUser.role)) throw new BadGatewayExcaption("Only admin or teacher create the course!", ErrorTypes.BAD_REQUEST);
-
-                const newCourse: ICourse = await CourseService.createCourse(foundUser.id, createCourseInput);
-                return newCourse;
-            } catch (error) {
-                throw await ErrorHandler(error);
-            }
         }
     },
 }

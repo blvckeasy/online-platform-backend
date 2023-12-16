@@ -24,6 +24,7 @@ export interface IGetCourseResponse {
 }
 
 export interface ICreateCourseInput {
-    name: string;
+    title: string;
+    thumbnail_url: string;
     price?: number;
 }

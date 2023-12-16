@@ -15,7 +15,8 @@ export default class CoursesModel {
             CREATE TABLE IF NOT EXISTS courses (
                 ID SERIAL PRIMARY KEY,
                 USER_ID INT NOT NULL REFERENCES users(id),
-                NAME VARCHAR(128) NOT NULL,
+                THUMBNAIL_URL VARCHAR(256) NOT NULL,
+                TITLE VARCHAR(128) NOT NULL,
                 PRICE FLOAT
             );
         `)

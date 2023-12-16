@@ -44,5 +44,4 @@ setInterval(async () => {
     await client.query(`
     DELETE FROM otp WHERE sended_time + INTERVAL '5 minute' <= NOW();
     `)
-    console.log("ochirildi")
 }, 90000) // 1.5 minute
