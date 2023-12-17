@@ -17,7 +17,7 @@ export class AuthService {
     }
 
     static async register (registerUserInput: IAuthRegisterUserInput): Promise<IUser> {
-        const { code } = registerUserInput;
+        const { fullname, code } = registerUserInput;
         const foundOTP: IOTP = (await client.query(`
             SELECT * FROM otp WHERE code = $1;
         `, [code])).rows[0];
@@ -42,7 +42,7 @@ export class AuthService {
                 const newUser: IUser = await UserService.createUser({
                     telegram_user_id: userInfo.telegram_user_id,
                     contact: userInfo.contact,
-                    fullname: userInfo.fullname,
+                    fullname: userInfo.fullname || fullname,
                     role: userInfo.role
                 })
                 return newUser;

@@ -11,9 +11,9 @@ async function botBootstrap () {
         const user = ctx.update.message.chat;
     
         return ctx.reply(`Salom ${user["first_name"] || "foydalanuvchi"} 👋
-        @onlineplatform42'ning rasmiy botiga xush kelibsiz
+@onlineplatform42'ning rasmiy botiga xush kelibsiz
         
-        ⬇️ Kontaktingizni yuboring (tugmani bosib)
+⬇️ Kontaktingizni yuboring (tugmani bosib)
         `, { reply_markup: keyboard })
     });
       
@@ -33,7 +33,7 @@ async function botBootstrap () {
                     }
                 }
             `
-        
+
             const variables = {
                 createUserQueueInput: {
                   telegram_user_id: user.id,

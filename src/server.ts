@@ -15,7 +15,6 @@ import botBootstrap from './bot/bot';
 
 async function bootstrap () {
     const PORT = ConfigService.get<number>("serverOptions.PORT");
-
     const app = express();
     const httpServer = http.createServer(app);
 
@@ -29,11 +28,8 @@ async function bootstrap () {
     await connectDatabase();
     await server.start();
     
-    await Routes(app);
-    
     app.use(cors<cors.CorsRequest>({
         origin: "*",
-        methods: ["GET", "POST", "PATCH", "DELETE"],
     }))
 
     app.use('/graphql', express.json(), expressMiddleware(server, {
@@ -44,6 +40,8 @@ async function bootstrap () {
     app.get("/api/helloworld", (req, res) => {
         res.send("hello world")
     })
+
+    await Routes(app);
 
     app.use(async (error: Error, req: Request, res: Response, next: NextFunction) => {
         console.log("Rest api error handler")
