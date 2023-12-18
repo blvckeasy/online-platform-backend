@@ -5,7 +5,8 @@ import { IUser } from "./user.interface";
 export interface ICourse {
     id: number;
     user_id: number;
-    name: string;
+    thumbnail_url: string;
+    title: string;
     price?: number;
 }
 

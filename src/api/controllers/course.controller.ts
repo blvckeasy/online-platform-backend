@@ -25,7 +25,7 @@ export default class CourseController {
             
             if (!["admin", "teacher"].includes(foundUser.role)) throw new BadGatewayExcaption("Only teacher or admin can be upload course", ErrorTypes.BAD_REQUEST);
 
-            const thumbnail_url: string = await FILE.writeFile(file.originalname, file.buffer);
+            const thumbnail_url: string = await FILE.writeFile(file.originalname, file.buffer, "image");
             const newCourse: ICourse = await CourseService.createCourse(foundUser.id, { title, price, thumbnail_url });
 
             return res.status(201).send({

@@ -26,10 +26,10 @@ async function botBootstrap () {
             const query = `
                 mutation($createUserQueueInput: CreateUserQueueInput!) {
                     generateCode(createUserQueueInput: $createUserQueueInput) {
-                      id
-                      code
-                      sended_time
-                      telegram_user_id
+                        id
+                        code
+                        sended_time
+                        telegram_user_id
                     }
                 }
             `
@@ -67,7 +67,7 @@ async function botBootstrap () {
     
     bot.start({
         onStart(botInfo) {
-            console.log('bot eshityapti')
+            console.log('🤖 Bot is listening')
         },
     })
 }

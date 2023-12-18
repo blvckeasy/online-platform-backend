@@ -7,7 +7,7 @@ export const courseTypeDef = `#graphql
         id: Int!
         user_id: Int!
         thumbnail_url: String!
-        name: String!
+        title: String!
         price: Float
     }
 

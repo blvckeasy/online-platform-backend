@@ -11,6 +11,7 @@ import graphqlScalarTypes from './utils/graphql-scalar-types';
 import Routes from './api/routes'
 import { ConfigService } from './config/config.service';
 import botBootstrap from './bot/bot';
+import path from 'path';
 
 
 async function bootstrap () {
@@ -31,6 +32,9 @@ async function bootstrap () {
     app.use(cors<cors.CorsRequest>({
         origin: "*",
     }))
+
+    app.use('/thumbnail_url', express.static(path.join(process.cwd(), 'uploads', 'images')))
+    app.use('/course_video', express.static(path.join(process.cwd(), 'uploads', 'videos')))
 
     app.use('/graphql', express.json(), expressMiddleware(server, {
         context: ({ req }) => ({ req }) as any,

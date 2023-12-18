@@ -34,8 +34,8 @@ export default class CourseVideoController {
 
             if (foundCourse.user_id != foundUser.id) throw new BadGatewayExcaption("It is not in your power to edit this video!", ErrorTypes.BAD_REQUEST);
 
-            const videoName: string = await FILE.writeFile(video.originalname, video.buffer);
-            const thumbnailName: string = await FILE.writeFile(thumbnail.originalname, thumbnail.buffer);
+            const videoName: string = await FILE.writeFile(video.originalname, video.buffer, "video");
+            const thumbnailName: string = await FILE.writeFile(thumbnail.originalname, thumbnail.buffer, "image");
 
             const newCourseVideo: ICourseVideo = await CourseVideoService.postCourseVideo({
                 thumbnail_url: thumbnailName,

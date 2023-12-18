@@ -9,7 +9,20 @@ import ErrorHandler, { ErrorTypes } from "../../../utils/error-handler";
 
 export const userResolver: BaseContext = {
 	Query: {
-		user: () => 'hello this is user route',
+		getMe: async (parent: any, __: any, context: any): Promise<IUser> => {
+			try {
+				const { token } = context.req.headers;
+				if (!token) throw new RequiredParamException("Token is required!", ErrorTypes.REQUIRED_PARAM);
+				
+				const user = JWT.verify(token) as IUser;
+				if (!user) throw new InvalidTokenException("Invalid token!", ErrorTypes.INVALID_TOKEN);
+				
+				const foundUser: IUser = await UserService.findOne({ id: user.id });
+				return foundUser;
+			} catch (error) {
+				throw await ErrorHandler(error);
+			}
+		},
 		deleteUser: async (_: any, __: any, context: any): Promise<IUser> => {
 			try {
 				const { token } = context.req.headers;

@@ -31,6 +31,7 @@ export async function connectDatabase () {
         client.connect();
         initPostgresqlExtensions(client);
         initModels();
+        console.log("🌳 Database connecting.")
     } catch (error) {
         console.error(error);
         process.exit(0);
