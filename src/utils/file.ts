@@ -13,8 +13,7 @@ type TFileType = "image" | "video";
 export class FILE {
     static async writeFile (originalName: string, buffer: Buffer, type: TFileType): Promise<string> {
         const fileName = await generateFileName(originalName);
-        console.log("path", Path.join(process.cwd(), "uploads", EFileType[type], fileName));
-        const writer = Fs.createWriteStream(Path.join(process.cwd(), "uploads", fileName), {
+        const writer = Fs.createWriteStream(Path.join(process.cwd(), "uploads", EFileType[type], fileName), {
             flags: "w",
         });
 
