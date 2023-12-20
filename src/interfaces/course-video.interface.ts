@@ -4,6 +4,10 @@ export interface IGetCourseVideosInput {
     theme_id?: number;
 }
 
+export interface IGetCourseVideoInput {
+    id: number;
+}
+
 export interface ICourseVideo {
     id: number;
     thumbnail_url: string;

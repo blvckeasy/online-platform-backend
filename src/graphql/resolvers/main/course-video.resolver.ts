@@ -1,5 +1,10 @@
 import { BaseContext } from "@apollo/server";
-import { IDeleteCourseVideoInput, IGetCourseVideosInput, IUpdateCourseVideoInput } from "../../../interfaces/course-video.interface";
+import { 
+    IDeleteCourseVideoInput, 
+    IGetCourseVideosInput, 
+    IUpdateCourseVideoInput, 
+    IGetCourseVideoInput 
+} from "../../../interfaces/course-video.interface";
 import { ICourseVideo } from "../../../interfaces/course-video.interface";
 import { CourseVideoService } from "../../../services/course-video.service";
 import ErrorHandler, { ErrorTypes } from "../../../utils/error-handler";
@@ -16,6 +21,15 @@ import { UserService } from "../../../services/user.service";
 export const CourseVideoResolver: BaseContext = {
     Query: {},
     Mutation: {
+        async getCourseVideo (_:any, { getCourseVideoInput }: { getCourseVideoInput: IGetCourseVideoInput }, context: any): Promise<ICourseVideo> {
+            try {
+                const courseVideo: ICourseVideo = await CourseVideoService.getCourseVideo(getCourseVideoInput);
+                return courseVideo;
+            } catch (error) {
+                throw await ErrorHandler(error);
+            }
+        },
+
         async getCourseVideos (_: any, { getCourseVideosInput }: { getCourseVideosInput: IGetCourseVideosInput }, context: any): Promise<ICourseVideo[]> {            
             try {
                 const courseVideos: ICourseVideo[] = await CourseVideoService.getCourseVideos(getCourseVideosInput)

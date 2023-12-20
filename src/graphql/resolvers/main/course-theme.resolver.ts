@@ -1,5 +1,5 @@
 import { BaseContext } from "@apollo/server";
-import { ICourseTheme, ICreateCourseThemeInput, IGetCourseThemeInput } from "../../../interfaces/course-theme.interface";
+import { ICourseTheme, ICreateCourseThemeInput, IGetCourseThemeInput, IGetCourseThemesInput } from "../../../interfaces/course-theme.interface";
 import { CourseThemeService } from "../../../services/course-theme.service";
 import JWT from "../../../utils/jwt";
 import { BadRequestExcaption, NotFoundException } from "../../../utils/errors";
@@ -29,12 +29,22 @@ export const CourseThemeResolver: BaseContext = {
                 throw await ErrorHandler(error);
             }
         },
-        getCourseThemes: async (_: any, { getCourseThemeInput }: { getCourseThemeInput: IGetCourseThemeInput }, context: any): Promise<ICourseTheme[]> => {
+        getCourseThemes: async (_: any, { getCourseThemesInput }: { getCourseThemesInput: IGetCourseThemesInput }, context: any): Promise<ICourseTheme[]> => {
             try {
-                return await CourseThemeService.getCourseThemes(getCourseThemeInput);
+                const courseThemes: ICourseTheme[] = await CourseThemeService.getCourseThemes(getCourseThemesInput);
+                return courseThemes;
             } catch (error) {
                 throw await ErrorHandler(error);
             }
         },
+
+        getCourseTheme: async (_: any, { getCourseThemeInput }: { getCourseThemeInput: IGetCourseThemeInput }, context: any): Promise<ICourseTheme> => {
+            try {
+                const courseTheme: ICourseTheme = await CourseThemeService.getCourseTheme(getCourseThemeInput);
+                return courseTheme;
+            } catch (error) {
+                throw await ErrorHandler(error);
+            }
+        }
     },
 }

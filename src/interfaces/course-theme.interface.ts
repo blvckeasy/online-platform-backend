@@ -16,9 +16,13 @@ export interface ICourseThemeWithVideos {
     videos?: ICourseVideo[];
 }
 
-export interface IGetCourseThemeInput {
+export interface IGetCourseThemesInput {
     id?: number;
     course_id?: number;
+}
+
+export interface IGetCourseThemeInput {
+    id: number;
 }
 
 export interface ICreateCourseThemeInput {
