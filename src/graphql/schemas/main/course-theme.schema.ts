@@ -30,7 +30,7 @@ export const courseThemeTypeDef = `#graphql
     }
 
     type Mutation {
-        getCourseTheme (getCourseThemeInput: GetCourseThemeInput!): CourseTheme!
+        getCourseTheme (getCourseThemeInput: GetCourseThemeInput!): CourseThemeWithVideo!
         getCourseThemes(getCourseThemesInput: GetCourseThemesInput): [CourseThemeWithVideo!]
         createCourseTheme(createCourseThemeInput: CreateCourseThemeInput!): CourseTheme!
     }

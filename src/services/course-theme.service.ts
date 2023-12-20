@@ -28,13 +28,15 @@ export class CourseThemeService {
 
     static async getCourseTheme (getCourseThemeInput: Required<IGetCourseThemeInput>): Promise<ICourseThemeWithVideos> {
         const { id } = getCourseThemeInput;
-        const courseTheme: ICourseThemeWithVideos = (await client.query(`
+        const theme: ICourseThemeWithVideos = (await client.query(`
             SELECT * FROM course_themes
             WHERE id = $1
             LIMIT 1;
         `, [id])).rows[0];
-    
-        return courseTheme;
+
+        theme.videos = await CourseVideoService.getCourseVideos({ theme_id: theme.id });
+        
+        return theme;
     }
 
     static async createCourseTheme (createCourseThemeInput: ICreateCourseThemeInput): Promise<ICourseTheme> {
