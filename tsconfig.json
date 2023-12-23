@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2016",
+    "target": "ES2015",
     "module": "CommonJS",
     "outDir": "./dist",
     "lib": ["es2015", "es2017", "dom"],
