@@ -11,7 +11,7 @@ import { FILE } from "../../utils/file";
 
 
 export default class CourseController {
-    async createCourse (req: Request, res: Response, next: NextFunction): Promise<Response> {
+    async createCourse (req: any, res: Response, next: NextFunction): Promise<Response> {
         try {
             const file = req.file;
             const { title, price } = req.body;
