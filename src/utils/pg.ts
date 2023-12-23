@@ -2,7 +2,11 @@ import { Client, ClientConfig } from 'pg';
 import { ConfigService } from '../config/config.service';
 import initModels from '../models';
 
-export const client: Client = new Client(ConfigService.get<ClientConfig>("databaseConfig"));
+const config = ConfigService.get<ClientConfig>("databaseConfig");
+
+export const client: Client = new Client({
+    connectionString: config.connectionString
+});
 
 function initPostgresqlExtensions (client: Client) {
     client.query(`
