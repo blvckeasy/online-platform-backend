@@ -3,6 +3,8 @@
     "target": "ES2016",
     "module": "CommonJS",
     "outDir": "./dist",
+    "lib": ["es2015", "es2017", "dom"],
+    "types": ["express"],
     "rootDir": "./src",
     "esModuleInterop": true,
   },
