@@ -40,6 +40,9 @@ async function bootstrap () {
         context: ({ req }) => ({ req }) as any,
     }));
 
+    app.get("/", (req, res) => {
+        res.send("working");
+    })
 
     app.get("/api/helloworld", (req, res) => {
         res.send("hello world")
