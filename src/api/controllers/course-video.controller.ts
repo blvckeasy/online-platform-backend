@@ -16,7 +16,8 @@ import { UserService } from "../../services/user.service";
 export default class CourseVideoController {
     async createCourseVideo (req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { thumbnail: [thumbnail], video: [video] } = req.files as { [fieldname: string]: Express.Multer.File[]; } | any
+            // const { thumbnail: [thumbnail], video: [video] } = req.files as { [fieldname: string]: Express.Multer.File[]; } | any
+            const { thumbnail: [thumbnail], video: [video] } = req.files as any
             const token = req.headers["token"] as string;
             const { title, theme_id }: { title: string, theme_id: number } = req.body;
             
