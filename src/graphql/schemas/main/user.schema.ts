@@ -40,7 +40,7 @@ export const userTypeDef = `#graphql
     }
 
     type Query {
-        getMe: User!
+        getMe: User
         deleteUser: User
     }
 
