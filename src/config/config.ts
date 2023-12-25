@@ -2,7 +2,7 @@ import DotEnv from 'dotenv';
 import { join } from 'node:path';
 
 DotEnv.config({
-    // path: join(process.cwd(), '.env')
+    path: join(process.cwd(), '.env')
 })
 
 export default () => ({
@@ -14,7 +14,7 @@ export default () => ({
     },
     serverOptions: {
         PORT: parseInt(process.env.PORT, 10) || 9000,
-        HOST: process.env.HOST || "localhost",
+        HOST: process.env.HOST,
         PROTOCOL: process.env.SERVER_PROTOCOL || "http",
     },
     databaseConfig: {
