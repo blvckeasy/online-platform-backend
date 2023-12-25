@@ -39,7 +39,7 @@ async function bootstrap () {
     app.use('/graphql', express.json(), expressMiddleware(server, {
         context: ({ req }) => ({ req }) as any,
     }));
-
+    
     app.get("/", (req, res) => {
         res.send("working");
     })
@@ -49,6 +49,10 @@ async function bootstrap () {
     })
 
     await Routes(app);
+
+    app.use("**", (req: Request, res: Response, next: NextFunction) => {
+        res.send("404 not found");
+    })
 
     app.use(async (error: Error, req: Request, res: Response, next: NextFunction) => {
         console.log("Rest api error handler")
