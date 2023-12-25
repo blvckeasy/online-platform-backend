@@ -15,7 +15,8 @@ import path from 'path';
 
 
 async function bootstrap() {
-    const PORT = ConfigService.get<number>("serverOptions.PORT");
+    // const PORT = ConfigService.get<number>("serverOptions.PORT");
+    const PORT = process.env.PORT;
     const HOST = ConfigService.get<string>("serverOptions.HOST");
     const PROTOCOL = ConfigService.get<string>("serverOptions.PROTOCOL");
 
