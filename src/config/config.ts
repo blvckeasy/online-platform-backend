@@ -1,9 +1,9 @@
 import DotEnv from 'dotenv';
 import { join } from 'node:path';
 
-DotEnv.config({
-    path: join(process.cwd(), '.env')
-})
+// DotEnv.config({
+//     path: join(process.cwd(), '.env')
+// })
 
 export default () => ({
     pagination: {
