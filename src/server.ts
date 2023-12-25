@@ -16,6 +16,8 @@ import path from 'path';
 
 async function bootstrap() {
     const PORT = ConfigService.get<number>("serverOptions.PORT");
+    const HOST = ConfigService.get<string>("serverOptions.HOST");
+
     const app = express();
     const httpServer = http.createServer(app);
 
@@ -60,7 +62,7 @@ async function bootstrap() {
         res.send("something went wrong")
     })
 
-    httpServer.listen({ port: PORT });
+    httpServer.listen({ port: PORT, host: HOST });
     console.log(`🚀 Server ready at http://localhost:${PORT}`);
 }
 

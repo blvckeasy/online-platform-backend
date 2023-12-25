@@ -13,8 +13,8 @@ export default () => ({
         }
     },
     serverOptions: {
-        PORT: parseInt(process.env.SERVER_PORT, 10) || 9000,
-        HOST: process.env.SERVER_HOST || "localhost",
+        PORT: parseInt(process.env.PORT, 10) || 9000,
+        HOST: process.env.HOST || "localhost",
         PROTOCOL: process.env.SERVER_PROTOCOL || "http",
     },
     databaseConfig: {
