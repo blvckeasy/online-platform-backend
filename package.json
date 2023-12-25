@@ -2,7 +2,7 @@
   "name": "typescript",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/server.js",
+    "start": "tsc && node dist/server.js",
     "start:dev": "nodemon src/server.ts",
     "bot:dev": "nodemon src/bot/bot.ts"
   },
@@ -37,5 +37,11 @@
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
-  }
+  },
+  "description": "",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
