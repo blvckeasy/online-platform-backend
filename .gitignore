@@ -6,3 +6,5 @@ node_modules
 task.txt
 uploads/images/*
 uploads/videos/*
+
+googleApiKey.json

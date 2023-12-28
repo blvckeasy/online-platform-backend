@@ -1,6 +1,8 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+import { 
+    ApolloServerPluginDrainHttpServer,
+} from '@apollo/server/plugin/drainHttpServer'
 import express, { NextFunction, Request, Response } from 'express';
 import http from 'http';
 import cors from 'cors';
@@ -25,7 +27,9 @@ async function bootstrap() {
     const server = new ApolloServer({
         typeDefs,
         resolvers: [graphqlScalarTypes, ...resolvers],
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+        plugins: [
+            ApolloServerPluginDrainHttpServer({ httpServer }),
+        ],
     });
 
     await botBootstrap();
