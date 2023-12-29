@@ -6,7 +6,7 @@ export const courseTypeDef = `#graphql
     type Course {
         id: Int!
         user_id: Int!
-        thumbnail_url: String!
+        google_drive_thumbnail_id: String!
         title: String!
         price: Float
         description: String

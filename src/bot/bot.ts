@@ -4,8 +4,10 @@ import { ConfigService } from "../config/config.service";
 async function botBootstrap () {
     const bot = new Bot(ConfigService.get<string>("botConfig.token"));
     const { PROTOCOL, HOST, PORT } = ConfigService.get<string>("serverOptions") as any;
-    const BACKEND_URL = `${PROTOCOL}://${HOST}:${PORT}`;
+    const BACKEND_URL = `${PROTOCOL}://${HOST || "localhost"}:${PORT}`;
     
+    console.log(BACKEND_URL);
+
     bot.command('start', async (ctx) => {
         const keyboard = new Keyboard().requestContact('Send My Contact').oneTime(true);
         const user = ctx.update.message.chat;
