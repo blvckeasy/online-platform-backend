@@ -1,13 +1,14 @@
+import { Response, NextFunction } from 'express';
 import Path from 'path';
 import Fs from 'fs';
 import { google, drive_v3, Auth } from 'googleapis';
 import { Readable } from 'stream';
 import { generateFileName } from './generate-filename';
 import googleApiKey from '../../googleApiKey.json';
-import { InternalServerError } from './errors';
+import { InternalServerError, NotFoundException } from './errors';
 import { ErrorTypes } from './error-handler';
 import { IGoogleDriveUploadResponse } from '../interfaces/config.interface';
-import { GaxiosPromise } from 'googleapis/build/src/apis/abusiveexperiencereport';
+
 
 enum EFileType {
     'image' = 'images',
@@ -87,6 +88,45 @@ export class GoogleDrive {
         } catch (error) {
             console.error('Upload error:', error.message);
             throw new InternalServerError("Google Drive Upload error!", ErrorTypes.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    async getFile(fileID: string, res: Response, next: NextFunction): Promise<number> {
+        try {
+            await this.authorize();
+
+            const drive = google.drive({ version: 'v3', auth: this.jwtClient })
+            
+            const status = await new Promise((resolve, reject) => {
+                drive.files.get({
+                    fileId: fileID,
+                    alt: 'media',
+                    fields: 'size',
+                    supportsAllDrives: true,
+                }, {
+                    responseType: 'stream',
+                }, (err, event) => {
+                    if (err) {
+                        return reject(new NotFoundException(JSON.parse(err.message).error.message, ErrorTypes.NOT_FOUND));
+                    }
+                    const data = event.data
+
+                    data.pipe(res);
+
+                    // let buf = [];
+                    // data.on("data", (chunk) => {
+                    //     buf.push(chunk);
+                    // })
+    
+                    // data.on("end", () => {
+                    //     const buffer = Buffer.concat(buf);
+                    //     resolve(buffer);      
+                    // })
+                })
+            })
+            return 200;
+        } catch (error) {
+            next(error);
         }
     }
 }

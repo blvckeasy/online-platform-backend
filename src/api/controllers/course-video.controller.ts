@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { FILE, GoogleDrive } from "../../utils/file";
+import { GoogleDrive } from "../../utils/file";
 import JWT from "../../utils/jwt";
 import { BadGatewayExcaption, BadRequestExcaption, NotFoundException } from "../../utils/errors";
 import { ICourseVideo } from "../../interfaces/course-video.interface";
@@ -54,5 +54,11 @@ export default class CourseVideoController {
         } catch (error) {
             next(error);
         }
+    }
+
+    async getFile (req: Request, res: Response, next: NextFunction) {
+        const { fileId } = req.params;
+
+        const status = await this.googleDrive.getFile(fileId, res, next);
     }
 }

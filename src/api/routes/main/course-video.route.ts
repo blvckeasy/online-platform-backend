@@ -8,7 +8,8 @@ const upload = Multer()
 const courseVideoController = new CourseVideoController();
 
 courseVideoRouter
-    .post("/upload", upload.single('video'), courseVideoController.createCourseVideo.bind(courseVideoController));
+    .post("/upload", upload.single('video'), courseVideoController.createCourseVideo.bind(courseVideoController))
+    .get("/:fileId", courseVideoController.getFile.bind(courseVideoController))
 
 export default {
     path: "/course-video",

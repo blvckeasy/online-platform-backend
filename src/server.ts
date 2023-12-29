@@ -63,8 +63,8 @@ async function bootstrap() {
 
     app.use(async (error: Error, req: Request, res: Response, next: NextFunction) => {
         console.log("Rest api error handler")
-        console.error(error);
         res.send("something went wrong")
+        console.error(error);
     })
 
     httpServer.listen({ port: PORT });
