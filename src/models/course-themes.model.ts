@@ -16,7 +16,7 @@ export default class CourseThemesModel {
                 ID SERIAL PRIMARY KEY,
                 COURSE_ID INT NOT NULL REFERENCES courses(id),
                 TITLE VARCHAR(128) NOT NULL,
-                DESCRIPTION VARCHAR(256) NOT NULL
+                DESCRIPTION VARCHAR(256)
             );
         `)
     }

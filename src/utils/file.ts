@@ -6,6 +6,7 @@ import googleApiKey from '../../googleApiKey.json';
 import JWT from './jwt';
 import { InternalServerError } from './errors';
 import { ErrorTypes } from './error-handler';
+import { IGoogleDriveUploadResponse } from '../interfaces/config.interface';
 
 enum EFileType {
     'image' = 'images',
@@ -35,7 +36,7 @@ export class GoogleDrive {
         this.authorize();
     }
 
-    async authorize (): Promise<JWT> {
+    private async authorize (): Promise<JWT> {
         const jwtClient = new google.auth.JWT(
             googleApiKey.client_email, 
             null, 
@@ -50,8 +51,8 @@ export class GoogleDrive {
         return jwtClient;
     }
 
-    async uploadFile (FILE, type: EFileType) {
-        const { fileName, mimeType, buffer } = FILE;
+    async uploadFile (FILE: Express.Multer.File, type: TFileType): Promise<IGoogleDriveUploadResponse> {
+        const { originalname, mimetype, buffer } = FILE;
         
         return new Promise((resolve, reject) => {
             if (!this.jwtClient) {
@@ -60,23 +61,26 @@ export class GoogleDrive {
             const drive = google.drive({ version: 'v3', auth: this.jwtClient as string })
 
             var fileMetaData = {
-                name: fileName,
+                name: originalname,
                 parents: ["1BZQh9YLTB56ACjtDAJ7KtUISHZD-t4SL"],
             }
 
             drive.files.create({
                 media: {
                     body: buffer,
-                    mimeType,
+                    mimeType: mimetype,
                 },
                 requestBody: fileMetaData as drive_v3.Schema$File,
                 fields: 'id'
             }, function (error, file) {
                 if (error) {
-                    return reject(error);
+                    return reject({
+                        error
+                    });
                 }
-                console.log(file.data);
-                resolve(file);
+                resolve({
+                    id: file.data.id,
+                });
             })
         })
     }

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { FILE } from "../../utils/file";
+import { FILE, GoogleDrive } from "../../utils/file";
 import JWT from "../../utils/jwt";
 import { BadGatewayExcaption, BadRequestExcaption, NotFoundException } from "../../utils/errors";
 import { ICourseVideo } from "../../interfaces/course-video.interface";
@@ -14,13 +14,22 @@ import { UserService } from "../../services/user.service";
 
 
 export default class CourseVideoController {
+    private googleDrive: GoogleDrive    
+
+    constructor () {
+        this.googleDrive = new GoogleDrive();
+    }
+
     async createCourseVideo (req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            // const { thumbnail: [thumbnail], video: [video] } = req.files as { [fieldname: string]: Express.Multer.File[]; } | any
-            const { thumbnail: [thumbnail], video: [video] } = req["files"] as any;
-            const token = req.headers["token"] as string;
-            const { title, theme_id }: { title: string, theme_id: number } = req.body;
+            // const { video: [video] } = req.files as { [fieldname: string]: Express.Multer.File[]; } | any
             
+            const video: Express.Multer.File = req.file
+            const { title, description, theme_id } = req.body;
+
+            const token = req.headers["token"] as string;
+            
+            if (!video) throw new NotFoundException("Video is require!", ErrorTypes.NOT_FOUND);
             const user = JWT.verify(token) as IUser;
 
             const foundUser: IUser = (await UserService.findOne({ id: user.id }));
@@ -35,12 +44,9 @@ export default class CourseVideoController {
 
             if (foundCourse.user_id != foundUser.id) throw new BadGatewayExcaption("It is not in your power to edit this video!", ErrorTypes.BAD_REQUEST);
 
-            const videoName: string = await FILE.writeFile(video.originalname, video.buffer, "video");
-            const thumbnailName: string = await FILE.writeFile(thumbnail.originalname, thumbnail.buffer, "image");
-
+            const { id: google_drive_video_id } = await this.googleDrive.uploadFile(video, "video")
             const newCourseVideo: ICourseVideo = await CourseVideoService.postCourseVideo({
-                thumbnail_url: thumbnailName,
-                video_url: videoName,
+                google_drive_video_id,
                 theme_id, 
                 title,
             })

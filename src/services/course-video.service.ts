@@ -4,11 +4,11 @@ import { client } from "../utils/pg";
 
 export class CourseVideoService {
     static async postCourseVideo (postCourseVideoInput: IPostCourseVideoInput): Promise<ICourseVideo> {
-        const { thumbnail_url, video_url, theme_id, title } = postCourseVideoInput;
+        const { google_drive_video_id, theme_id, title } = postCourseVideoInput;
 
         const newCourseVideo: ICourseVideo = (await client.query(`
-            INSERT INTO COURSE_VIDEOS (thumbnail_url, video_url, theme_id, title) VALUES ($1, $2, $3, $4) RETURNING *;
-        `, [thumbnail_url, video_url, theme_id, title])).rows[0];
+            INSERT INTO COURSE_VIDEOS (google_drive_video_id, theme_id, title) VALUES ($1, $2, $3) RETURNING *;
+        `, [ google_drive_video_id, theme_id, title])).rows[0];
 
         return newCourseVideo;
     }

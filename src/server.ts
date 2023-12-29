@@ -32,7 +32,7 @@ async function bootstrap() {
         ],
     });
 
-    await botBootstrap();
+    // await botBootstrap();
     await connectDatabase();
     await server.start();
 
