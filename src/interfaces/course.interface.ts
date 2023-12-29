@@ -5,9 +5,10 @@ import { IUser } from "./user.interface";
 export interface ICourse {
     id: number;
     user_id: number;
-    thumbnail_url: string;
+    google_drive_thumbnail_id: string;
     title: string;
     price?: number;
+    description?: string;
 }
 
 export interface ICourseWithUser {
@@ -26,6 +27,7 @@ export interface IGetCourseResponse {
 
 export interface ICreateCourseInput {
     title: string;
-    thumbnail_url: string;
+    google_drive_thumbnail_id: string;
     price?: number;
+    description?: string;
 }

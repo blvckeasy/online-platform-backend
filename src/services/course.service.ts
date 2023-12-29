@@ -39,12 +39,12 @@ export class CourseService {
     }
 
     static async createCourse (user_id: number, createCourseInput: ICreateCourseInput): Promise<ICourse> {
-        const { title, price, thumbnail_url } = createCourseInput;
+        const { title, price, google_drive_thumbnail_id, description } = createCourseInput;
         if (!title) throw new NotFoundException("Video title is required!", ErrorTypes.NOT_FOUND);
 
         const newCourse: ICourse = (await client.query(`
-            INSERT INTO COURSES (user_id, thumbnail_url, title, price) VALUES ($1, $2, $3, $4) RETURNING *;
-        `, [user_id, thumbnail_url, title, price])).rows[0];
+            INSERT INTO COURSES (user_id, google_drive_thumbnail_id, title, price, description) VALUES ($1, $2, $3, $4, $5) RETURNING *;
+        `, [user_id, google_drive_thumbnail_id, title, price, description])).rows[0];
 
         return newCourse;
     }

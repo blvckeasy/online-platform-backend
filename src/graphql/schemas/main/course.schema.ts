@@ -9,6 +9,7 @@ export const courseTypeDef = `#graphql
         thumbnail_url: String!
         title: String!
         price: Float
+        description: String
     }
 
     type CourseWithUser {
