@@ -21,6 +21,7 @@ export interface IPostCourseVideoInput {
     theme_id: number;
     google_drive_video_id: string;
     title: string;
+    description: string;
 }
 
 export interface IUpdateCourseVideoInput {

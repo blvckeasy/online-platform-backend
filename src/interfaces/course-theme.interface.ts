@@ -5,14 +5,12 @@ export interface ICourseTheme {
     id: number;
     course_id: number;
     title: string;
-    description: string;
 }
 
 export interface ICourseThemeWithVideos {
     id: number;
     course_id: number;
     title: string;
-    description: string;
     videos?: ICourseVideo[];
 }
 
@@ -28,5 +26,4 @@ export interface IGetCourseThemeInput {
 export interface ICreateCourseThemeInput {
     course_id: number;
     title: string;
-    description: string;
 }

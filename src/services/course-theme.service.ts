@@ -40,14 +40,14 @@ export class CourseThemeService {
     }
 
     static async createCourseTheme (createCourseThemeInput: ICreateCourseThemeInput): Promise<ICourseTheme> {
-        const { course_id, title, description } = createCourseThemeInput;
+        const { course_id, title } = createCourseThemeInput;
         const foundCourse = await CourseService.getSearchCourses({ id: course_id });
         
         if (!foundCourse) throw new NotFoundException("Course is not found!", ErrorTypes.NOT_FOUND);
 
         const newCourseTheme: ICourseTheme = (await client.query(`
-            INSERT INTO course_themes (course_id, title, description) VALUES ($1, $2, $3) RETURNING *;
-        `, [course_id, title, description])).rows[0];
+            INSERT INTO course_themes (course_id, title) VALUES ($1, $2) RETURNING *;
+        `, [course_id, title])).rows[0];
     
         return newCourseTheme;
     } 

@@ -45,7 +45,6 @@ export const userTypeDef = `#graphql
     }
 
     type Mutation {
-        createUser(createUserInput: CreateUserInput!): ResponseUser!
         updateUser(updateUserInput: UpdateUserInput!): User!
     }
 `;

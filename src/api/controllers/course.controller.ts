@@ -4,22 +4,22 @@ import { UserService } from "../../services/user.service";
 import { IUser } from "../../interfaces/user.interface";
 import { BadGatewayExcaption, NotFoundException } from "../../utils/errors";
 import { ErrorTypes } from "../../utils/error-handler";
-import { generateFileName } from "../../utils/generate-filename";
 import { CourseService } from "../../services/course.service";
 import { ICourse } from "../../interfaces/course.interface";
-import { FILE, GoogleDrive } from "../../utils/file";
+import { GoogleDrive } from "../../utils/file";
 
 
 export default class CourseController {
-    private googleDrive: GoogleDrive
+    public googleDrive: GoogleDrive;
 
     constructor () {
-        this.googleDrive = new GoogleDrive()
+        this.googleDrive = new GoogleDrive();
     }
 
-    async createCourse (req: any, res: Response, next: NextFunction): Promise<Response> {
+    async createCourse (req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
-            const image = req.file;
+            const image = req.file;;
+
             const { title, price, description } = req.body;
             const token = req.headers.token as string
 
@@ -36,7 +36,7 @@ export default class CourseController {
 
             return res.status(201).send({
                 course: newCourse,
-            })
+            })   
         } catch (error) {
             next(error);
         }

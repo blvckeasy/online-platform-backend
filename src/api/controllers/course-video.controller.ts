@@ -22,8 +22,6 @@ export default class CourseVideoController {
 
     async createCourseVideo (req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            // const { video: [video] } = req.files as { [fieldname: string]: Express.Multer.File[]; } | any
-            
             const video: Express.Multer.File = req.file
             const { title, description, theme_id } = req.body;
 
@@ -49,6 +47,7 @@ export default class CourseVideoController {
                 google_drive_video_id,
                 theme_id, 
                 title,
+                description
             })
 
             res.status(200).send(newCourseVideo);

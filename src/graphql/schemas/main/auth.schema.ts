@@ -8,7 +8,6 @@ export const authTypeDef = `#graphql
     }
 
     input RegisterUserInput {
-        fullname: String
         code: Int!
     }
 

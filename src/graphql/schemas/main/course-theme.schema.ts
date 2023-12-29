@@ -7,7 +7,6 @@ export const courseThemeTypeDef = `#graphql
     input CreateCourseThemeInput {
         course_id: Int!
         title: String!
-        description: String!
     }
 
     input GetCourseThemeInput {
@@ -18,14 +17,12 @@ export const courseThemeTypeDef = `#graphql
         id: Int!
         course_id: Int!
         title: String!
-        description: String!
     }
 
     type CourseThemeWithVideo {
         id: Int!
         course_id: Int!
         title: String!
-        description: String!
         videos: [CourseVideo]
     }
 

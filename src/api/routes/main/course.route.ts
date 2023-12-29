@@ -7,7 +7,7 @@ const upload = Multer()
 const courseController = new CourseController();
 
 CourseRouter
-    .post("/create", upload.single('thumbnail'), courseController.createCourse);
+    .post("/create", upload.single('thumbnail'), courseController.createCourse.bind(courseController))
 
 
 export default {
