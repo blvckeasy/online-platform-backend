@@ -57,8 +57,13 @@ export default class CourseVideoController {
     }
 
     async getFile (req: Request, res: Response, next: NextFunction) {
-        const { fileId } = req.params;
-
-        const status = await this.googleDrive.getFile(fileId, res, next);
+        try {
+            const { fileId } = req.params;
+            const data: any = await this.googleDrive.getFile(fileId);
+        
+            data.pipe(res);
+        } catch (error) {
+            next(error);
+        }
     }
 }

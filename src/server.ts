@@ -40,19 +40,12 @@ async function bootstrap() {
         origin: "*",
     }))
 
-    app.use('/thumbnail_url', express.static(path.join(process.cwd(), 'uploads', 'images')))
-    app.use('/course_video', express.static(path.join(process.cwd(), 'uploads', 'videos')))
-
     app.use('/graphql', express.json(), expressMiddleware(server, {
         context: ({ req }) => ({ req }) as any,
     }));
 
     app.get("/", (req, res) => {
         res.send("working");
-    })
-
-    app.get("/api/helloworld", (req, res) => {
-        res.send("hello world")
     })
 
     await Routes(app);

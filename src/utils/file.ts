@@ -91,42 +91,28 @@ export class GoogleDrive {
         }
     }
 
-    async getFile(fileID: string, res: Response, next: NextFunction): Promise<number> {
-        try {
-            await this.authorize();
+    async getFile(fileID: string) {
+        await this.authorize();
 
-            const drive = google.drive({ version: 'v3', auth: this.jwtClient })
-            
-            const status = await new Promise((resolve, reject) => {
-                drive.files.get({
-                    fileId: fileID,
-                    alt: 'media',
-                    fields: 'size',
-                    supportsAllDrives: true,
-                }, {
-                    responseType: 'stream',
-                }, (err, event) => {
-                    if (err) {
-                        return reject(new NotFoundException(JSON.parse(err.message).error.message, ErrorTypes.NOT_FOUND));
-                    }
-                    const data = event.data
-
-                    data.pipe(res);
-
-                    // let buf = [];
-                    // data.on("data", (chunk) => {
-                    //     buf.push(chunk);
-                    // })
-    
-                    // data.on("end", () => {
-                    //     const buffer = Buffer.concat(buf);
-                    //     resolve(buffer);      
-                    // })
-                })
+        const drive = google.drive({ version: 'v3', auth: this.jwtClient })
+        
+        const data = await new Promise((resolve, reject) => {
+            drive.files.get({
+                fileId: fileID,
+                alt: 'media',
+                fields: 'size',
+                supportsAllDrives: true,
+            }, {
+                responseType: 'stream',
+            }, (err, event) => {
+                if (err) {
+                    return reject(new NotFoundException(JSON.parse(err.message).error.message, ErrorTypes.NOT_FOUND));
+                }
+                const data = event.data
+                resolve(data);
             })
-            return 200;
-        } catch (error) {
-            next(error);
-        }
+        })
+
+        return data;
     }
 }
