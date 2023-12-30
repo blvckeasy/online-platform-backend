@@ -27,7 +27,7 @@ export const courseVideoTypeDef = `#graphql
     }
 
     type Mutation {
-        getCourseVideo (getCourseVideoInput: GetCourseVideoInput!): CourseVideo!
+        getCourseVideo (getCourseVideoInput: GetCourseVideoInput!): CourseVideo
         getCourseVideos (getCourseVideosInput: GetCourseVideosInput): [CourseVideo!]
         updateCourseVideo (updateCourseVideoInput: UpdateCourseVideoInput!): CourseVideo!
         deleteCourseVideo (deleteCourseVideoInput: DeleteCourseVideoInput!): CourseVideo!

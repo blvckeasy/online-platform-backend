@@ -26,6 +26,7 @@ import UsersQueueModel from "./users-queue.model";
 import CoursesModel from "./courses.model";
 import CourseThemesModel from "./course-themes.model";
 import CourseVideosModel from "./course-videos.model";
+import FAQModel from "./faq.model";
 
 export default function initModels () {
     new UserModel();
@@ -35,4 +36,5 @@ export default function initModels () {
     new CoursesModel();
     new CourseThemesModel();
     new CourseVideosModel();
+    new FAQModel();
 }

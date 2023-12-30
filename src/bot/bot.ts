@@ -6,8 +6,6 @@ async function botBootstrap () {
     const { PROTOCOL, HOST, PORT } = ConfigService.get<string>("serverOptions") as any;
     const BACKEND_URL = `${PROTOCOL}://${HOST || "localhost"}:${PORT}`;
     
-    console.log(BACKEND_URL);
-
     bot.command('start', async (ctx) => {
         const keyboard = new Keyboard().requestContact('Send My Contact').oneTime(true);
         const user = ctx.update.message.chat;
@@ -66,7 +64,7 @@ async function botBootstrap () {
         }
     })
 
-    
+    // await bot.stop();
     bot.start({
         onStart(botInfo) {
             console.log('🤖 Bot is listening')

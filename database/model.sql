@@ -66,3 +66,16 @@ CREATE TABLE IF NOT EXISTS users_queue (
     CONTACT VARCHAR(32) NOT NULL UNIQUE,
     ROLE user_role DEFAULT 'student'
 );
+
+DROP TABLE faq CASCADE;
+CREATE TABLE IF NOT EXISTS faq (
+    ID SERIAL PRIMARY KEY,
+    question VARCHAR(1024) NOT NULL,
+    answer VARCHAR(1024) NOT NULL
+);
+
+
+INSERT INTO faq (question, answer) VALUES
+    ('Kurs bepulmi?', 'Narxlarni har bir kursning sahifasida ko’rishingiz mumkin.'),
+    ('Kurs noldan boshlab o''rgatiladimi?', 'Kurslarda o’qish uchun IT va dasturchilik bilim-tajribasi talab qilinmaydi, faqat kompyuter savodxonligi kerak xolos. Har bir kursda dasturchilik asoslari ham o’rgatiladi.'),
+    ('Darslar uchun qancha vaqt ajratish kerak?', 'Har bir dars 1 kun mobaynida o’rganish uchun mo’ljallangan.');
