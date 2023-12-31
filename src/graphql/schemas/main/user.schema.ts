@@ -9,7 +9,7 @@ export const userTypeDef = `#graphql
 
     input CreateUserInput {
         fullname: String
-        telegram_user_id: Int!
+        telegram_user_id: String!
         contact: String!
         role: EUserRole
     }
@@ -28,7 +28,7 @@ export const userTypeDef = `#graphql
     type User {
         id: ID!
         fullname: String
-        telegram_user_id: Int!
+        telegram_user_id: String!
         contact: String!
         role: EUserRole!
         signed_time: DateTime

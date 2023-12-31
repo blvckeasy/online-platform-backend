@@ -3,7 +3,7 @@ export const authTypeDef = `#graphql
 
     input CreateUserQueueInput {
         fullname: String
-        telegram_user_id: Int!
+        telegram_user_id: String!
         contact: String!
     }
 
@@ -13,7 +13,7 @@ export const authTypeDef = `#graphql
 
     type CreatedOTPResponse {
         id: Int!
-        telegram_user_id: Int!
+        telegram_user_id: String!
         code: Int!
         sended_time: DateTime
     }

@@ -8,13 +8,13 @@ export interface IGetUsers {
 
 export interface ISearchUserInput {
     id?: number;
-    telegram_user_id?: number;
+    telegram_user_id?: string;
     contact?: string;
 }
 
 export interface ICreateUserInput {
     fullname?: string;
-    telegram_user_id: number;
+    telegram_user_id: string;
     contact: string;
     role: EUserRole;
 }
@@ -22,7 +22,7 @@ export interface ICreateUserInput {
 export interface IUser {
     id: number;
     fullname?: string;
-    telegram_user_id: number;
+    telegram_user_id: string;
     contact: number;
     role: EUserRole;
     signed_time: Date;

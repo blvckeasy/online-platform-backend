@@ -12,10 +12,10 @@ export default class UserProfileAvatarModel {
     #createDatabaseIfNotExists () {
         this.client.query(`
             CREATE TABLE IF NOT EXISTS user_profile_avatar (
-                ID SERIAL PRIMARY KEY,
-                USER_ID INT NOT NULL REFERENCES users(ID),
+                ID BIGSERIAL PRIMARY KEY,
+                USER_ID BIGINT NOT NULL REFERENCES users(ID),
                 TYPE profile_avatar_type DEFAULT 'image',
-                GOOGLE_DRIVE_PICTURE_URL VARCHAR(256),
+                GOOGLE_DRIVE_PICTURE_ID VARCHAR(256),
                 UPLOADED_TIME TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
             );
         `)

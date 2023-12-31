@@ -10,6 +10,8 @@ async function botBootstrap () {
         const keyboard = new Keyboard().requestContact('Send My Contact').oneTime(true);
         const user = ctx.update.message.chat;
     
+        console.log('userID:', user.id);
+
         return ctx.reply(`Salom ${user["first_name"] || "foydalanuvchi"} 👋
 @onlineplatform42'ning rasmiy botiga xush kelibsiz
         
@@ -36,9 +38,9 @@ async function botBootstrap () {
 
             const variables = {
                 createUserQueueInput: {
-                  telegram_user_id: user.id,
+                  telegram_user_id: String(user.id),
                   contact: contact.phone_number,
-                  fullname: user.first_name,
+                  fullname: `${user.first_name} ${user.last_name || ""}`.trim(),
                 }
             }
         
@@ -48,9 +50,17 @@ async function botBootstrap () {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ query, variables })
-            })
-            const codeResponse = (await response.json()).data.generateCode;
+            }) 
 
+            const { data, errors } = await response.json();
+
+            if (errors) {
+                console.error(errors);
+                return;
+            }
+
+            const codeResponse = data.generateCode;
+            
             return ctx.reply(`
                 sizning 1 daqiqalik kodingiz <code>${codeResponse.code}</code>. 
             `, {

@@ -20,7 +20,7 @@ export class UsersQueueService {
         return newUserQueue
     }
 
-    static async getUser (telegram_user_id: number): Promise<IUserQueue> {
+    static async getUser (telegram_user_id: string): Promise<IUserQueue> {
         const foundQueueUser: IUserQueue = (await client.query(`
             SELECT * FROM users_queue WHERE telegram_user_id = $1;
         `, [telegram_user_id])).rows[0];
@@ -28,7 +28,7 @@ export class UsersQueueService {
         return foundQueueUser;
     }
 
-    static async deleteUser (telegram_user_id: number): Promise<IUserQueue> {
+    static async deleteUser (telegram_user_id: string): Promise<IUserQueue> {
         const deletedUser: IUserQueue = (await client.query(`
             DELETE FROM users_queue WHERE telegram_user_id = $1 RETURNING *;
         `, [telegram_user_id])).rows[0];

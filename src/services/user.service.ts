@@ -31,7 +31,7 @@ export class UserService {
             FROM USERS 
             WHERE
                 id = CASE WHEN $1 > 0 THEN $1 ELSE -1 END OR
-                telegram_user_id = CASE WHEN $2 > 0 THEN $2 ELSE -1 END OR
+                telegram_user_id = CASE WHEN length($2) > 0 THEN $2 ELSE '' END OR
                 contact = CASE WHEN length($3) > 0 THEN $3 ELSE '' END
         `, [id, telegram_user_id, contact])).rows[0];
 

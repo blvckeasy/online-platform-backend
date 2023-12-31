@@ -12,9 +12,9 @@ export default class UsersQueueModel {
     #createDatabaseIfNotExists () {
         this.client.query(`
             CREATE TABLE IF NOT EXISTS users_queue (
-                ID SERIAL PRIMARY KEY,
+                ID BIGSERIAL PRIMARY KEY,
                 FULLNAME VARCHAR(64),
-                TELEGRAM_USER_ID INT NOT NULL UNIQUE,
+                TELEGRAM_USER_ID BIGINT NOT NULL UNIQUE,
                 CONTACT VARCHAR(32) NOT NULL UNIQUE,
                 ROLE user_role DEFAULT 'student'
             );

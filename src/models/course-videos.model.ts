@@ -13,9 +13,9 @@ export default class CourseVideosModel {
     #createTableIfNotExists () {
         this.client.query(`
             CREATE TABLE IF NOT EXISTS course_videos (
-                ID SERIAL PRIMARY KEY,
+                ID BIGSERIAL PRIMARY KEY,
                 GOOGLE_DRIVE_VIDEO_ID VARCHAR,
-                THEME_ID INT NOT NULL REFERENCES course_themes(id),
+                THEME_ID BIGINT NOT NULL REFERENCES course_themes(id),
                 TITLE VARCHAR(128) NOT NULL,
                 DESCRIPTION VARCHAR,
                 UPLOADED_AT TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
