@@ -1,14 +1,21 @@
 import { NextFunction, Request, Response } from "express";
+import { ErrorTypes } from "../../utils/error-handler";
 import { GoogleDrive } from "../../utils/file";
 import JWT from "../../utils/jwt";
-import { BadGatewayExcaption, BadRequestExcaption, NotFoundException } from "../../utils/errors";
+import {
+    BadGatewayExcaption,
+    BadRequestExcaption,
+    InvalidTokenException,
+    NotFoundException,
+    UnauthorizedExcaption
+} from "../../utils/errors";
 import { ICourseVideo } from "../../interfaces/course-video.interface";
+import { IParsedAccessToken } from "../../interfaces/jwt.interface";
 import { IUser } from "../../interfaces/user.interface";
+import { ICourse } from "../../interfaces/course.interface";
 import { ICourseTheme } from "../../interfaces/course-theme.interface";
-import { ErrorTypes } from "../../utils/error-handler";
 import { CourseVideoService } from "../../services/course-video.service";
 import { CourseThemeService } from "../../services/course-theme.service";
-import { ICourse } from "../../interfaces/course.interface";
 import { CourseService } from "../../services/course.service";
 import { UserService } from "../../services/user.service";
 
@@ -20,15 +27,40 @@ export default class CourseVideoController {
         this.googleDrive = new GoogleDrive();
     }
 
+    async uploadVideoToAlreadyHaveCourseVideo (req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const video: Express.Multer.File = req.file;
+            const { video_id } = req.body;
+            const token = req.headers.token as string;
+
+            const parsedToken = JWT.verify(token) as IParsedAccessToken;
+            if (!parsedToken) throw new InvalidTokenException("Invalid token!", ErrorTypes.INVALID_TOKEN);
+
+            const foundUser = await UserService.findOne({ id: parsedToken.id });
+            if (!foundUser) throw new UnauthorizedExcaption("User is unauthorized", ErrorTypes.BAD_USER_INPUT);
+
+            const foundCourseVideo = await CourseVideoService.getCourseVideo({ id: video_id });
+            if (!foundCourseVideo) throw new NotFoundException("course video is not found!", ErrorTypes.NOT_FOUND);
+
+            const { id: google_drive_video_id } = await this.googleDrive.uploadFile(video, "video");
+            const updatedCourseVideo = await CourseVideoService.updateCourseVideo({ course_video_id: video_id, google_drive_video_id });
+
+            res.status(200).send(updatedCourseVideo);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async createCourseVideo (req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const video: Express.Multer.File = req.file
+            if (!video) throw new NotFoundException("Video is require!", ErrorTypes.NOT_FOUND);
+            
             const { title, description, theme_id } = req.body;
-
             const token = req.headers["token"] as string;
             
-            if (!video) throw new NotFoundException("Video is require!", ErrorTypes.NOT_FOUND);
             const user = JWT.verify(token) as IUser;
+            if (!user) throw new InvalidTokenException("Invalid token!", ErrorTypes.INVALID_TOKEN);
 
             const foundUser: IUser = (await UserService.findOne({ id: user.id }));
             if (!foundUser) throw new NotFoundException("User not found", ErrorTypes.NOT_FOUND);

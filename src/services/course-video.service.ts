@@ -59,15 +59,17 @@ export class CourseVideoService {
     }
 
     static async updateCourseVideo (updateCourseVideoInput: IUpdateCourseVideoInput): Promise<ICourseVideo> {
-        const { course_video_id, title } = updateCourseVideoInput
+        const { course_video_id, title, google_drive_video_id, description } = updateCourseVideoInput
         const updatedCourseVideo: ICourseVideo = (await client.query(`
             UPDATE COURSE_VIDEOS
             SET
-                title = CASE WHEN length($1) > 0 THEN $1 ELSE title END
+                google_drive_video_id = CASE WHEN length($1) > 0 THEN $1 ELSE google_drive_video_id END,
+                title = CASE WHEN length($2) > 0 THEN $2 ELSE title END,
+                description = CASE WHEN length($3) > 0 THEN $3 ELSE description END
             WHERE
-                id = $2
+                id = $1
             RETURNING *;
-        `, [title, course_video_id])).rows[0];
+        `, [course_video_id, google_drive_video_id, title, description])).rows[0];
 
         return updatedCourseVideo;
     }

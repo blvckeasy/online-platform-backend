@@ -40,7 +40,9 @@ export interface IPostCourseVideoInput {
 
 export interface IUpdateCourseVideoInput {
     course_video_id: number;
+    google_drive_video_id?: string;
     title?: string;
+    description?: string;
 }
 
 export interface IDeleteCourseVideoInput {
