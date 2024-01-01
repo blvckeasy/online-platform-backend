@@ -1,11 +1,7 @@
-export interface IGetCourseVideosInput {
-    id?: number;
-    google_drive_video_id?: string;
-    theme_id?: number;
-}
-
-export interface IGetCourseVideoInput {
-    id: number;
+export interface ICreateCourseVideoWithoutVideo {
+    theme_id: number;
+    title: string;
+    description?: string;
 }
 
 export interface ICourseVideo {
@@ -15,6 +11,24 @@ export interface ICourseVideo {
     title: string;
     description?: string;
     uploaded_at: Date;
+}
+
+export interface ICourseVideoWithoutVideo {
+    id: number;
+    theme_id: number;
+    title: string;
+    description?: string;
+    uploaded_at: Date;
+}
+
+export interface IGetCourseVideosInput {
+    id?: number;
+    google_drive_video_id?: string;
+    theme_id?: number;
+}
+
+export interface IGetCourseVideoInput {
+    id: number;
 }
 
 export interface IPostCourseVideoInput {

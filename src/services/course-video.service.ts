@@ -1,8 +1,27 @@
-import { ICourseVideo, IDeleteCourseVideoInput, IGetCourseVideoInput, IGetCourseVideosInput, IPostCourseVideoInput, IUpdateCourseVideoInput } from "../interfaces/course-video.interface";
+import {
+    ICourseVideo,
+    ICourseVideoWithoutVideo,
+    ICreateCourseVideoWithoutVideo,
+    IDeleteCourseVideoInput,
+    IGetCourseVideoInput,
+    IGetCourseVideosInput,
+    IPostCourseVideoInput,
+    IUpdateCourseVideoInput
+} from "../interfaces/course-video.interface";
 import { client } from "../utils/pg";
 
 
 export class CourseVideoService {
+    static async createCourseVideoWithoutVideo (createCourseVideoWithoutVideoInput: ICreateCourseVideoWithoutVideo): Promise<ICourseVideoWithoutVideo> {
+        const { theme_id, title, description } = createCourseVideoWithoutVideoInput;
+    
+        const newCourseVideoWithoutVideo = (await client.query(`
+            INSERT INTO COURSE_VIDEOS (THEME_ID, TITLE, DESCRIPTION) VALUES ($1, $2, $3) RETURNING *;
+        `, [theme_id, title, description])).rows[0] as ICourseVideoWithoutVideo;
+
+        return newCourseVideoWithoutVideo;
+    }
+
     static async postCourseVideo (postCourseVideoInput: IPostCourseVideoInput): Promise<ICourseVideo> {
         const { google_drive_video_id, theme_id, title } = postCourseVideoInput;
 

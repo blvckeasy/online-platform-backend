@@ -1,27 +1,58 @@
 import { BaseContext } from "@apollo/server";
-import { 
-    IDeleteCourseVideoInput, 
-    IGetCourseVideosInput, 
-    IUpdateCourseVideoInput, 
-    IGetCourseVideoInput 
+import {
+    IDeleteCourseVideoInput,
+    IGetCourseVideosInput,
+    IUpdateCourseVideoInput,
+    IGetCourseVideoInput,
+    ICreateCourseVideoWithoutVideo,
+    ICourseVideoWithoutVideo
 } from "../../../interfaces/course-video.interface";
-import { ICourseVideo } from "../../../interfaces/course-video.interface";
-import { CourseVideoService } from "../../../services/course-video.service";
-import ErrorHandler, { ErrorTypes } from "../../../utils/error-handler";
-import JWT from "../../../utils/jwt";
-import { BadGatewayExcaption, NotFoundException } from "../../../utils/errors";
+import { IParsedAccessToken } from "../../../interfaces/jwt.interface";
 import { ICourseTheme } from "../../../interfaces/course-theme.interface";
-import { CourseThemeService } from "../../../services/course-theme.service";
-import { CourseService } from "../../../services/course.service";
 import { ICourse } from "../../../interfaces/course.interface";
 import { IUser } from "../../../interfaces/user.interface";
+import { ICourseVideo } from "../../../interfaces/course-video.interface";
+import ErrorHandler, { ErrorTypes } from "../../../utils/error-handler";
+import JWT from "../../../utils/jwt";
+import {
+    BadGatewayExcaption,
+    InvalidTokenException,
+    NotFoundException,
+    RequiredParamException,
+    UnauthorizedExcaption 
+} from "../../../utils/errors";
+import { CourseService } from "../../../services/course.service";
+import { CourseThemeService } from "../../../services/course-theme.service";
 import { UserService } from "../../../services/user.service";
+import { CourseVideoService } from "../../../services/course-video.service";
 
 
 export const CourseVideoResolver: BaseContext = {
     Query: {},
     Mutation: {
-        async getCourseVideo (_:any, { getCourseVideoInput }: { getCourseVideoInput: IGetCourseVideoInput }, context: any): Promise<ICourseVideo> {
+        async createCourseVideoWithoutVideo(_: any, { createCourseVideoWithoutVideoInput }: { createCourseVideoWithoutVideoInput: ICreateCourseVideoWithoutVideo }, context: any): Promise<ICourseVideoWithoutVideo> {
+            try {
+                const token: string = context.req.headers.token;
+                if (!token) throw new RequiredParamException("Token is require!", ErrorTypes.REQUIRED_PARAM);
+
+                const parsedToken = JWT.verify(token) as IParsedAccessToken;
+                if (!parsedToken) throw new InvalidTokenException("Invalid token!", ErrorTypes.INVALID_TOKEN);
+
+                const foundUser = await UserService.findOne({ id: parsedToken.id });
+                if (!foundUser) throw new UnauthorizedExcaption("User is unauthorized!", ErrorTypes.BAD_USER_INPUT);
+                if (!["teacher"].includes(foundUser.role)) throw new BadGatewayExcaption("Only teacher create course video!", ErrorTypes.BAD_REQUEST); 
+                
+                const { theme_id } = createCourseVideoWithoutVideoInput;
+                const foundTheme = await CourseThemeService.getCourseTheme({ id: theme_id });
+                if (!foundTheme) throw new NotFoundException("Course not found!", ErrorTypes.NOT_FOUND);
+
+                const newCourseVideoWithoutVideo: ICourseVideoWithoutVideo = await CourseVideoService.createCourseVideoWithoutVideo(createCourseVideoWithoutVideoInput);
+                return newCourseVideoWithoutVideo;
+            } catch (error) {
+                throw await ErrorHandler(error);
+            }
+        },
+        async getCourseVideo(_: any, { getCourseVideoInput }: { getCourseVideoInput: IGetCourseVideoInput }, context: any): Promise<ICourseVideo> {
             try {
                 const courseVideo: ICourseVideo = await CourseVideoService.getCourseVideo(getCourseVideoInput);
                 return courseVideo;
@@ -30,7 +61,7 @@ export const CourseVideoResolver: BaseContext = {
             }
         },
 
-        async getCourseVideos (_: any, { getCourseVideosInput }: { getCourseVideosInput: IGetCourseVideosInput }, context: any): Promise<ICourseVideo[]> {            
+        async getCourseVideos(_: any, { getCourseVideosInput }: { getCourseVideosInput: IGetCourseVideosInput }, context: any): Promise<ICourseVideo[]> {
             try {
                 const courseVideos: ICourseVideo[] = await CourseVideoService.getCourseVideos(getCourseVideosInput)
                 return courseVideos;
@@ -38,11 +69,11 @@ export const CourseVideoResolver: BaseContext = {
                 throw await ErrorHandler(error);
             }
         },
-        async updateCourseVideo (parent: any, { updateCourseVideoInput }: { updateCourseVideoInput: IUpdateCourseVideoInput }, context: any): Promise<ICourseVideo> {
+        async updateCourseVideo(parent: any, { updateCourseVideoInput }: { updateCourseVideoInput: IUpdateCourseVideoInput }, context: any): Promise<ICourseVideo> {
             try {
                 const token: string = context.req.headers.token;
                 const user = JWT.verify(token) as IUser;
-                
+
                 const foundUser: IUser = (await UserService.findOne({ id: user.id }));
                 if (!foundUser) throw new NotFoundException("User not found", ErrorTypes.NOT_FOUND);
 
@@ -63,7 +94,7 @@ export const CourseVideoResolver: BaseContext = {
                 throw await ErrorHandler(error);
             }
         },
-        async deleteCourseVideo (parent: any, { deleteCourseVideoInput }: { deleteCourseVideoInput: IDeleteCourseVideoInput }, context: any): Promise<ICourseVideo> {
+        async deleteCourseVideo(parent: any, { deleteCourseVideoInput }: { deleteCourseVideoInput: IDeleteCourseVideoInput }, context: any): Promise<ICourseVideo> {
             try {
                 const token: string = context.req.headers.token;
                 const user = JWT.verify(token) as IUser;

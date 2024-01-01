@@ -1,6 +1,6 @@
 import { ICourseTheme, ICourseThemeWithVideos, ICreateCourseThemeInput, IGetCourseThemeInput, IGetCourseThemesInput } from "../interfaces/course-theme.interface";
 import { ErrorTypes } from "../utils/error-handler";
-import { NotFoundException } from "../utils/errors";
+import { InternalServerError, NotFoundException } from "../utils/errors";
 import { client } from "../utils/pg";
 import { CourseVideoService } from "./course-video.service";
 import { CourseService } from "./course.service";
@@ -27,15 +27,19 @@ export class CourseThemeService {
     }
 
     static async getCourseTheme (getCourseThemeInput: Required<IGetCourseThemeInput>): Promise<ICourseThemeWithVideos> {
-        const { id } = getCourseThemeInput;
+        const id = getCourseThemeInput?.id;
+        if (!id) throw new InternalServerError("id is require!", ErrorTypes.INTERNAL_SERVER_ERROR);
+
         const theme: ICourseThemeWithVideos = (await client.query(`
             SELECT * FROM course_themes
             WHERE id = $1
             LIMIT 1;
         `, [id])).rows[0];
 
-        theme.videos = await CourseVideoService.getCourseVideos({ theme_id: theme.id });
-        
+        if (theme) {
+            theme.videos = await CourseVideoService.getCourseVideos({ theme_id: theme.id });
+        }
+
         return theme;
     }
 

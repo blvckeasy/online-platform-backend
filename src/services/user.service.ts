@@ -33,6 +33,7 @@ export class UserService {
                 id = CASE WHEN $1 > 0 THEN $1 ELSE -1 END OR
                 telegram_user_id = CASE WHEN length($2) > 0 THEN $2 ELSE '' END OR
                 contact = CASE WHEN length($3) > 0 THEN $3 ELSE '' END
+            LIMIT 1;
         `, [id, telegram_user_id, contact])).rows[0];
 
         return foundUser;
