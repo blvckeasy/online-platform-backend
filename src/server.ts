@@ -13,6 +13,8 @@ import graphqlScalarTypes from './utils/graphql-scalar-types';
 import Routes from './api/routes'
 import { ConfigService } from './config/config.service';
 import botBootstrap from './bot/bot';
+import { AlreadyExistsExcaption, InternalServerError } from './utils/errors';
+import { ErrorTypes } from './utils/error-handler';
 
 
 async function bootstrap() {
@@ -44,19 +46,40 @@ async function bootstrap() {
     }));
 
     app.get("/", (req, res) => {
-        res.send("working");
+        res.send("salom dunyo");
     })
-
+    
     await Routes(app);
 
     app.use("**", (req: Request, res: Response, next: NextFunction) => {
         res.send("404 not found");
     })
 
-    app.use(async (error: Error, req: Request, res: Response, next: NextFunction) => {
-        console.log("Rest api error handler")
-        res.send("something went wrong")
+    app.use(async (error: any, req: Request, res: Response, next: NextFunction) => {
+        const ERRORS = await import('./utils/errors');
+
+        for await (const [ errorName ] of Object.entries(ERRORS)) {
+            const constructorName = error.constructor.name
+            if (constructorName === errorName && constructorName !== "InternalServerError") {
+                return res.send({
+                    error: {
+                        code: error.code,
+                        message: error.message,
+                        constructor: error.constructor.name,
+                    }
+                });
+            }
+        }
+        // something for internal errros
+        
         console.error(error);
+        return res.status(500).send({
+            error: {
+                code: ErrorTypes.INTERNAL_SERVER_ERROR,
+                message: "Internal Server Error",
+                constructor: "InternalServerError",
+            }
+        });
     })
 
     httpServer.listen({ port: PORT });

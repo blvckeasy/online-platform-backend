@@ -10,8 +10,6 @@ async function botBootstrap () {
         const keyboard = new Keyboard().requestContact('Send My Contact').oneTime(true);
         const user = ctx.update.message.chat;
     
-        console.log('userID:', user.id);
-
         return ctx.reply(`Salom ${user["first_name"] || "foydalanuvchi"} 👋
 @onlineplatform42'ning rasmiy botiga xush kelibsiz
         

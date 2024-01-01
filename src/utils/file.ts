@@ -112,7 +112,6 @@ export class GoogleDrive {
                 resolve(data);
             })
         })
-
         return data;
     }
 }

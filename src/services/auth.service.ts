@@ -23,9 +23,6 @@ export class AuthService {
         `, [code])).rows[0];
 
         if (!foundOTP) throw new AuthorizationFailed("Wrong code!", ErrorTypes.BAD_USER_INPUT);
-
-        console.log("foundOTP:", foundOTP);
-
         if (addMinutes(foundOTP.sended_time, 1) < new Date()) {
             await OTPService.delete({ telegram_user_id: foundOTP.telegram_user_id });
             throw new UnauthorizedExcaption("Code expired!", ErrorTypes.BAD_USER_INPUT);
