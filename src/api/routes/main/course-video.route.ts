@@ -9,6 +9,7 @@ const courseVideoController = new CourseVideoController();
 
 courseVideoRouter
     .post("/upload", upload.single('video'), courseVideoController.createCourseVideo.bind(courseVideoController))
+    .post('/upload-video/alreadyHaveCourse', upload.single('video'), courseVideoController.uploadVideoToAlreadyHaveCourseVideo.bind(courseVideoController))
     .get("/:fileId", courseVideoController.getFile.bind(courseVideoController))
 
 export default {

@@ -63,9 +63,9 @@ export class CourseVideoService {
         const updatedCourseVideo: ICourseVideo = (await client.query(`
             UPDATE COURSE_VIDEOS
             SET
-                google_drive_video_id = CASE WHEN length($1) > 0 THEN $1 ELSE google_drive_video_id END,
-                title = CASE WHEN length($2) > 0 THEN $2 ELSE title END,
-                description = CASE WHEN length($3) > 0 THEN $3 ELSE description END
+                google_drive_video_id = CASE WHEN length($2) > 0 THEN $2 ELSE google_drive_video_id END,
+                title = CASE WHEN length($3) > 0 THEN $3 ELSE title END,
+                description = CASE WHEN length($4) > 0 THEN $4 ELSE description END
             WHERE
                 id = $1
             RETURNING *;
