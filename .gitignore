@@ -8,3 +8,5 @@ uploads/images/*
 uploads/videos/*
 
 googleApiKey.json
+
+logs/*

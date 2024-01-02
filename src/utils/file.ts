@@ -1,13 +1,14 @@
-import { Response, NextFunction } from 'express';
-import Path from 'path';
-import Fs from 'fs';
 import { google, drive_v3, Auth } from 'googleapis';
 import { Readable } from 'stream';
+import { Request } from 'express';
+import Path from 'path';
+import Fs from 'fs';
 import { generateFileName } from './generate-filename';
 import googleApiKey from '../../googleApiKey.json';
 import { InternalServerError, NotFoundException } from './errors';
 import { ErrorTypes } from './error-handler';
 import { IGoogleDriveUploadResponse } from '../interfaces/config.interface';
+import dateFormat from './date-format'
 
 
 enum EFileType {
@@ -26,6 +27,18 @@ export class FILE {
 
         writer.write(buffer);
         return fileName;
+    }
+
+    static writeErrorFile (error: Error, req: Request): void {
+        const data: string = 
+`method: \"${req.method}\"
+url: \"${req.url}\"
+date: \"${new Date()}\"
+error: \"${error}\"
+body: \"(${JSON.stringify(req.body || "", null, 4)})\"
+----------------------------------------------------------------------------------------
+`
+        Fs.appendFileSync(Path.join(process.cwd(), 'logs', `${dateFormat()}.log`), data)
     }
 }
 
@@ -48,7 +61,7 @@ export class GoogleDrive {
     
             return jwtClient;
         } catch (error) {
-            throw new InternalServerError("Google Drive Authorization error!", ErrorTypes.INTERNAL_SERVER_ERROR);
+            throw new InternalServerError(error, ErrorTypes.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -86,8 +99,7 @@ export class GoogleDrive {
 
             return data as IGoogleDriveUploadResponse;
         } catch (error) {
-            console.error('Upload error:', error.message);
-            throw new InternalServerError("Google Drive Upload error!", ErrorTypes.INTERNAL_SERVER_ERROR);
+            throw new InternalServerError(error, ErrorTypes.INTERNAL_SERVER_ERROR);
         }
     }
 

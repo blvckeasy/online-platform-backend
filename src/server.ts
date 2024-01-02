@@ -15,6 +15,7 @@ import { ConfigService } from './config/config.service';
 import botBootstrap from './bot/bot';
 import { AlreadyExistsExcaption, InternalServerError } from './utils/errors';
 import { ErrorTypes } from './utils/error-handler';
+import { FILE } from './utils/file';
 
 
 async function bootstrap() {
@@ -37,16 +38,21 @@ async function bootstrap() {
     await connectDatabase();
     await server.start();
 
+    app.use(express.json());
     app.use(cors<cors.CorsRequest>({
         origin: "*",
     }))
 
-    app.use('/graphql', express.json(), expressMiddleware(server, {
+    app.use('/graphql', expressMiddleware(server, {
         context: ({ req }) => ({ req }) as any,
     }));
 
     app.get("/", (req, res) => {
-        res.send("salom dunyo");
+        res.send({
+            'Project name': 'Easy Learn',
+            version: '1.0.0^production',
+            author: 'github.com/blvckeasy',
+        });
     })
     
     await Routes(app);
@@ -70,9 +76,8 @@ async function bootstrap() {
                 });
             }
         }
-        // something for internal errros
         
-        console.error(error);
+        FILE.writeErrorFile(error, req);
         return res.status(500).send({
             error: {
                 code: ErrorTypes.INTERNAL_SERVER_ERROR,
