@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Express, NextFunction, Request, Response } from "express";
 import { ErrorTypes } from "../../utils/error-handler";
 import { GoogleDrive } from "../../utils/file";
 import JWT from "../../utils/jwt";
