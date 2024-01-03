@@ -14,8 +14,8 @@ export default () => ({
     },
     serverOptions: {
         PORT: parseInt(process.env.PORT, 10) || 9000,
-        HOST: process.env.HOST,
-        PROTOCOL: process.env.SERVER_PROTOCOL || "http",
+        // HOST: process.env.HOST,
+        // PROTOCOL: process.env.SERVER_PROTOCOL || "http",
     },
     databaseConfig: {
         host: process.env.DB_HOST || "locahost",

@@ -44,5 +44,8 @@
   "main": "dist/server.js",
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "npm": "10.2.5"
+  }
 }
