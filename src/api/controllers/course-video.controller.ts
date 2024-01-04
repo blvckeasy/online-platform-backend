@@ -18,6 +18,7 @@ import { CourseVideoService } from "../../services/course-video.service";
 import { CourseThemeService } from "../../services/course-theme.service";
 import { CourseService } from "../../services/course.service";
 import { UserService } from "../../services/user.service";
+import { GlobalExpressMulterFile } from "../../interfaces/config.interface";
 
 
 export default class CourseVideoController {
@@ -29,7 +30,7 @@ export default class CourseVideoController {
 
     async uploadVideoToAlreadyHaveCourseVideo (req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const video: Express.Multer.File = (req as any).file;
+            const video = req.file as GlobalExpressMulterFile;
             const { video_id } = req.body;
             const token = req.headers.token as string;
 
@@ -53,7 +54,7 @@ export default class CourseVideoController {
 
     async createCourseVideo (req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const video: Express.Multer.File = req.file
+            const video = req.file as GlobalExpressMulterFile;
             if (!video) throw new NotFoundException("Video is require!", ErrorTypes.NOT_FOUND);
             
             const { title, description, theme_id } = req.body;

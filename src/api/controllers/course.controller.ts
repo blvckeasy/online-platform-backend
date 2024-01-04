@@ -7,6 +7,7 @@ import { ErrorTypes } from "../../utils/error-handler";
 import { CourseService } from "../../services/course.service";
 import { ICourse } from "../../interfaces/course.interface";
 import { GoogleDrive } from "../../utils/file";
+import { GlobalExpressMulterFile } from "../../interfaces/config.interface";
 
 
 export default class CourseController {
@@ -18,7 +19,7 @@ export default class CourseController {
 
     async createCourse (req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
-            const image = req.file;;
+            const image = req.file as GlobalExpressMulterFile;
 
             const { title, price, description } = req.body;
             const token = req.headers.token as string

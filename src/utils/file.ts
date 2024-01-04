@@ -7,7 +7,7 @@ import { generateFileName } from './generate-filename';
 import googleApiKey from '../../googleApiKey.json';
 import { InternalServerError, NotFoundException } from './errors';
 import { ErrorTypes } from './error-handler';
-import { IGoogleDriveUploadResponse } from '../interfaces/config.interface';
+import { GlobalExpressMulterFile, IGoogleDriveUploadResponse } from '../interfaces/config.interface';
 import dateFormat from './date-format'
 
 
@@ -65,7 +65,7 @@ export class GoogleDrive {
         }
     }
 
-    async uploadFile(FILE: Express.Multer.File, type: TFileType): Promise<IGoogleDriveUploadResponse> {
+    async uploadFile(FILE: GlobalExpressMulterFile, type: TFileType): Promise<IGoogleDriveUploadResponse> {
         try {
             await this.authorize()
             
