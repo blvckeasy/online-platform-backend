@@ -1,4 +1,4 @@
-import { Express, NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { ErrorTypes } from "../../utils/error-handler";
 import { GoogleDrive } from "../../utils/file";
 import JWT from "../../utils/jwt";
@@ -29,7 +29,7 @@ export default class CourseVideoController {
 
     async uploadVideoToAlreadyHaveCourseVideo (req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const video: Express.Multer.File = req.file;
+            const video: Express.Multer.File = (req as any).file;
             const { video_id } = req.body;
             const token = req.headers.token as string;
 

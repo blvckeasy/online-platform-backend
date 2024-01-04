@@ -1,11 +1,13 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import Multer from 'Multer';
+import * as Multer from 'Multer';
 import CourseVideoController from '../../controllers/course-video.controller';
 
 const courseVideoRouter = Router()
-const upload = Multer()
-
 const courseVideoController = new CourseVideoController();
+
+const storage = Multer.memoryStorage()
+const upload = Multer.default({ storage })
+
 
 courseVideoRouter
     .post("/upload", upload.single('video'), courseVideoController.createCourseVideo.bind(courseVideoController))

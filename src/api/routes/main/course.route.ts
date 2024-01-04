@@ -1,10 +1,12 @@
 import { Router } from "express";
-import Multer from 'Multer';
+import * as Multer from 'Multer';
 import CourseController from "../../controllers/course.controller";
 
 const CourseRouter = Router()
-const upload = Multer()
 const courseController = new CourseController();
+
+const storage = Multer.memoryStorage()
+const upload = Multer.default({ storage })
 
 CourseRouter
     .post("/create", upload.single('thumbnail'), courseController.createCourse.bind(courseController))
