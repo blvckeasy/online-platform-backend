@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Multer from 'Multer';
+import Multer from 'multer';
 import CourseController from "../../controllers/course.controller";
 
 const CourseRouter = Router()
