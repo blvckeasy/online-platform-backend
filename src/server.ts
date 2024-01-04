@@ -53,7 +53,7 @@ async function bootstrap() {
             version: '1.0.0^production',
             author: 'github.com/blvckeasy',
         });
-    })
+    });
     
     await Routes(app);
 

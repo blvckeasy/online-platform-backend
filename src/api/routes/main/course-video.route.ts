@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import Multer from 'multer';
+import Multer from 'Multer';
 import CourseVideoController from '../../controllers/course-video.controller';
 
 const courseVideoRouter = Router()
