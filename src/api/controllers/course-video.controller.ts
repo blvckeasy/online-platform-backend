@@ -30,7 +30,7 @@ export default class CourseVideoController {
 
     async uploadVideoToAlreadyHaveCourseVideo (req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const video = req.file as GlobalExpressMulterFile;
+            const video = (req as any).file as GlobalExpressMulterFile;
             const { video_id } = req.body;
             const token = req.headers.token as string;
 

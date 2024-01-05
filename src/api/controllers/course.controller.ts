@@ -19,7 +19,7 @@ export default class CourseController {
 
     async createCourse (req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
-            const image = req.file as GlobalExpressMulterFile;
+            const image = (req as any).file as GlobalExpressMulterFile;
 
             const { title, price, description } = req.body;
             const token = req.headers.token as string
