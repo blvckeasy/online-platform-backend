@@ -54,7 +54,7 @@ export default class CourseVideoController {
 
     async createCourseVideo (req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const video = req.file as GlobalExpressMulterFile;
+            const video = (req as any).file as GlobalExpressMulterFile;
             if (!video) throw new NotFoundException("Video is require!", ErrorTypes.NOT_FOUND);
             
             const { title, description, theme_id } = req.body;
