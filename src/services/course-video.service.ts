@@ -6,28 +6,38 @@ import {
     IGetCourseVideoInput,
     IGetCourseVideosInput,
     IPostCourseVideoInput,
-    IUpdateCourseVideoInput
+    IUpdateCourseVideoInput,
+    IUpdateCourseVideoPositionInput
 } from "../interfaces/course-video.interface";
+import { ErrorTypes } from "../utils/error-handler";
+import { NotFoundException } from "../utils/errors";
 import { client } from "../utils/pg";
 
 
 export class CourseVideoService {
+    static async generatePositionNumber(theme_id: number): Promise<number> {
+        const theme_videos = await this.getCourseVideos({ theme_id });
+        return theme_videos.length + 1
+    }
+
     static async createCourseVideoWithoutVideo (createCourseVideoWithoutVideoInput: ICreateCourseVideoWithoutVideo): Promise<ICourseVideoWithoutVideo> {
         const { theme_id, title, description } = createCourseVideoWithoutVideoInput;
-    
+        const position = await this.generatePositionNumber(theme_id);
+
         const newCourseVideoWithoutVideo = (await client.query(`
-            INSERT INTO COURSE_VIDEOS (THEME_ID, TITLE, DESCRIPTION) VALUES ($1, $2, $3) RETURNING *;
-        `, [theme_id, title, description])).rows[0] as ICourseVideoWithoutVideo;
+            INSERT INTO COURSE_VIDEOS (THEME_ID, TITLE, DESCRIPTION, POSITION) VALUES ($1, $2, $3, $4) RETURNING *;
+        `, [theme_id, title, description, position])).rows[0] as ICourseVideoWithoutVideo;
 
         return newCourseVideoWithoutVideo;
     }
 
     static async postCourseVideo (postCourseVideoInput: IPostCourseVideoInput): Promise<ICourseVideo> {
         const { google_drive_video_id, theme_id, title } = postCourseVideoInput;
+        const position = await this.generatePositionNumber(theme_id);
 
         const newCourseVideo: ICourseVideo = (await client.query(`
-            INSERT INTO COURSE_VIDEOS (google_drive_video_id, theme_id, title) VALUES ($1, $2, $3) RETURNING *;
-        `, [ google_drive_video_id, theme_id, title])).rows[0];
+            INSERT INTO COURSE_VIDEOS (GOOGLE_DRIVE_VIDEO_ID, THEME_ID, TITLE, POSITION) VALUES ($1, $2, $3, $4) RETURNING *;
+        `, [ google_drive_video_id, theme_id, title, position])).rows[0];
 
         return newCourseVideo;
     }
@@ -72,6 +82,56 @@ export class CourseVideoService {
         `, [course_video_id, google_drive_video_id, title, description])).rows[0];
 
         return updatedCourseVideo;
+    }
+
+    static async updateCourseVideoPosition (updateCourseVideoPositionInput: IUpdateCourseVideoPositionInput): Promise<ICourseVideo> {
+        const { after_video_id, before_video_id, course_id } = updateCourseVideoPositionInput;
+
+        const courseVideo = await this.getCourseVideo({ id: course_id });
+        if (!courseVideo) throw new NotFoundException("Course is not found!", ErrorTypes.NOT_FOUND);
+
+        const afterCourseVideo = await this.getCourseVideo({ id: after_video_id });
+        const beforeCourseVideo = await this.getCourseVideo({ id: before_video_id });
+
+        if (courseVideo.position < beforeCourseVideo.position) {
+            await client.query(`
+                UPDATE COURSE_VIDEOS
+                SET
+                    position = position - 1
+                WHERE
+                    theme_id = $1 AND position > $2 and postion < $3
+            `, [courseVideo.theme_id, courseVideo.position, afterCourseVideo.position]);
+            
+            const updatedCourseVideo = (await client.query(`
+                UPDATE COURSE_VIDEOS
+                SET
+                    position = $3
+                WHERE
+                    theme_id = $1 AND id = $2
+                RETURNING *;
+            `, [courseVideo.theme_id, course_id, beforeCourseVideo.position])).rows[0] as ICourseVideo;
+
+            return updatedCourseVideo;
+        } else {
+            await client.query(`
+                UPDATE COURSE_VIDEOS
+                SET
+                    position = position + 1
+                WHERE
+                    theme_id = $1 AND position > $2 AND position < $3
+            `, [courseVideo.theme_id, beforeCourseVideo.position, courseVideo.position])
+            
+            const updatedCourseVideo = (await client.query(`
+                UPDATE COURSE_VIDEOS
+                SET
+                    position = $3
+                WHERE
+                    theme_id = $1 AND course_id = $2
+                RETURNING *;
+            `, [courseVideo.theme_id, course_id, beforeCourseVideo.position + 1])).rows[0] as ICourseVideo;
+
+            return updatedCourseVideo;
+        }
     }
 
     static async deleteCourseVideo (deleteCourseVideoInput: IDeleteCourseVideoInput): Promise<ICourseVideo> {

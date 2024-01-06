@@ -78,7 +78,7 @@ export default class CourseVideoController {
             const { id: google_drive_video_id } = await this.googleDrive.uploadFile(video, "video")
             const newCourseVideo: ICourseVideo = await CourseVideoService.postCourseVideo({
                 google_drive_video_id,
-                theme_id, 
+                theme_id,
                 title,
                 description
             })

@@ -27,6 +27,7 @@ export const courseVideoTypeDef = `#graphql
     type CourseVideo {
         id: Int!
         google_drive_video_id: String
+        position: Int
         theme_id: Int!
         title: String!
         uploaded_at: DateTime
@@ -35,6 +36,7 @@ export const courseVideoTypeDef = `#graphql
     type CourseVideoWithoutVideo {
         id: Int!
         theme_id: Int!
+        position: Int
         title: String!
         uploaded_at: DateTime
     }

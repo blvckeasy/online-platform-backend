@@ -16,6 +16,7 @@ export default class CourseVideosModel {
                 ID BIGSERIAL PRIMARY KEY,
                 GOOGLE_DRIVE_VIDEO_ID VARCHAR,
                 THEME_ID BIGINT NOT NULL REFERENCES course_themes(id),
+                POSITION INT,
                 TITLE VARCHAR(128) NOT NULL,
                 DESCRIPTION VARCHAR,
                 UPLOADED_AT TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP

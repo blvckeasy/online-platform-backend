@@ -1,3 +1,5 @@
+import { ICourse } from "./course.interface";
+
 export interface ICreateCourseVideoWithoutVideo {
     theme_id: number;
     title: string;
@@ -8,6 +10,7 @@ export interface ICourseVideo {
     id: number;
     google_drive_video_id: string;
     theme_id: number;
+    position: number;
     title: string;
     description?: string;
     uploaded_at: Date;
@@ -16,6 +19,7 @@ export interface ICourseVideo {
 export interface ICourseVideoWithoutVideo {
     id: number;
     theme_id: number;
+    position: number;
     title: string;
     description?: string;
     uploaded_at: Date;
@@ -43,6 +47,12 @@ export interface IUpdateCourseVideoInput {
     google_drive_video_id?: string;
     title?: string;
     description?: string;
+}
+
+export interface IUpdateCourseVideoPositionInput {
+    course_id: number;
+    after_video_id?: number;
+    before_video_id?: number;
 }
 
 export interface IDeleteCourseVideoInput {
