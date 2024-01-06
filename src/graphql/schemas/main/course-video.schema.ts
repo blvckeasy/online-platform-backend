@@ -19,6 +19,12 @@ export const courseVideoTypeDef = `#graphql
         course_video_id: Int!
         title: String
     }
+
+    input UpdateCourseVideoPositionInput {
+        course_id: Int!
+        after_video_id: Int
+        before_video_id: Int
+    }
     
     input DeleteCourseVideoInput {
         id: Int!
@@ -46,6 +52,7 @@ export const courseVideoTypeDef = `#graphql
         getCourseVideo (getCourseVideoInput: GetCourseVideoInput!): CourseVideo
         getCourseVideos (getCourseVideosInput: GetCourseVideosInput): [CourseVideo!]
         updateCourseVideo (updateCourseVideoInput: UpdateCourseVideoInput!): CourseVideo!
+        updateCourseVideoPosition (updateCourseVideoPositionInput: UpdateCourseVideoPositionInput!): CourseVideo!
         deleteCourseVideo (deleteCourseVideoInput: DeleteCourseVideoInput!): CourseVideo!
     }
 

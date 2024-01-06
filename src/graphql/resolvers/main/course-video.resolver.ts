@@ -5,7 +5,8 @@ import {
     IUpdateCourseVideoInput,
     IGetCourseVideoInput,
     ICreateCourseVideoWithoutVideo,
-    ICourseVideoWithoutVideo
+    ICourseVideoWithoutVideo,
+    IUpdateCourseVideoPositionInput
 } from "../../../interfaces/course-video.interface";
 import { IParsedAccessToken } from "../../../interfaces/jwt.interface";
 import { ICourseTheme } from "../../../interfaces/course-theme.interface";
@@ -94,12 +95,28 @@ export const CourseVideoResolver: BaseContext = {
                 throw await ErrorHandler(error);
             }
         },
+        async updateCourseVideoPosition (
+            _: any,
+            { updateCourseVideoPositionInput }: { updateCourseVideoPositionInput: IUpdateCourseVideoPositionInput },
+            context: any
+        ):  Promise<ICourseVideo> {
+            const token: string = context.req.headers.token;
+            if (!token) throw new NotFoundException("Token is require!", ErrorTypes.INVALID_TOKEN);
+
+            const user = JWT.verify(token) as IParsedAccessToken;
+            
+            const foundUser: IUser = await UserService.findOne({ id: user.id })
+            if (!foundUser) throw new NotFoundException("User not found!", ErrorTypes.NOT_FOUND);
+
+            const updatedCourseVideo = await CourseVideoService.updateCourseVideoPosition(updateCourseVideoPositionInput);
+            return updatedCourseVideo;
+        },
         async deleteCourseVideo(parent: any, { deleteCourseVideoInput }: { deleteCourseVideoInput: IDeleteCourseVideoInput }, context: any): Promise<ICourseVideo> {
             try {
                 const token: string = context.req.headers.token;
                 const user = JWT.verify(token) as IUser;
 
-                const foundUser: IUser = (await UserService.findOne({ id: user.id }));
+                const foundUser: IUser = await UserService.findOne({ id: user.id });
                 if (!foundUser) throw new NotFoundException("User not found", ErrorTypes.NOT_FOUND);
 
                 const foundCourseVideo: ICourseVideo = (await CourseVideoService.getCourseVideos({ id: deleteCourseVideoInput.id }))[0];

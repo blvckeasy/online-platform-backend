@@ -50,7 +50,7 @@ export class CourseVideoService {
                 id = CASE WHEN $1 > 0 THEN $1 ELSE -1 END OR
                 theme_id = CASE WHEN $2 > 0 THEN $2 ELSE -1 END OR
                 CASE WHEN $1 IS NULL AND $2 IS NULL THEN true ELSE false END
-            ORDER BY uploaded_at
+            ORDER BY position;
         `, [id, theme_id])).rows;
 
         return courseVideos;
@@ -99,7 +99,7 @@ export class CourseVideoService {
                 SET
                     position = position - 1
                 WHERE
-                    theme_id = $1 AND position > $2 and postion < $3
+                    theme_id = $1 AND position > $2 and position < $3
             `, [courseVideo.theme_id, courseVideo.position, afterCourseVideo.position]);
             
             const updatedCourseVideo = (await client.query(`
@@ -126,7 +126,7 @@ export class CourseVideoService {
                 SET
                     position = $3
                 WHERE
-                    theme_id = $1 AND course_id = $2
+                    theme_id = $1 AND id = $2
                 RETURNING *;
             `, [courseVideo.theme_id, course_id, beforeCourseVideo.position + 1])).rows[0] as ICourseVideo;
 
