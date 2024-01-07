@@ -96,6 +96,7 @@ export class CourseVideoService {
         const beforeCourseVideo = await this.getCourseVideo({ id: before_video_id || -1 });
 
         if (afterCourseVideo) {
+            
             if (courseVideo.position < afterCourseVideo.position) {
                 await client.query(`
                     UPDATE COURSE_VIDEOS
@@ -135,7 +136,33 @@ export class CourseVideoService {
                 
                 return updatedCourseVideo;
             }
-        }
+
+        } else if (beforeCourseVideo) {
+
+            if (courseVideo.position < beforeCourseVideo.position) {
+                await client.query(`
+                    UPDATE COURSE_VIDEOS
+                    SET
+                        position = position - 1
+                    WHERE
+                        theme_id = $1 AND position < $2 AND position > $3
+                `, [courseVideo.theme_id, beforeCourseVideo.position, courseVideo.position]);
+
+                const updatedCourseVideo = (await client.query(`
+                    UPDATE COURSE_VIDEOS
+                    SET
+                        position = $3
+                    WHERE
+                        theme_id = $1 AND id = $2
+                `, [courseVideo.theme_id, courseVideo.id, beforeCourseVideo.position - 1])).rows[0] as ICourseVideo;
+
+                return updatedCourseVideo;
+
+            } else if (courseVideo.position > beforeCourseVideo.position) {
+                
+            }
+
+        } 
     }
 
     static async deleteCourseVideo (deleteCourseVideoInput: IDeleteCourseVideoInput): Promise<ICourseVideo> {
