@@ -124,16 +124,18 @@ export class CourseVideoService {
                         position = position - 1
                     WHERE
                         theme_id = $1 AND position > $2 AND position <= $3;
-                `, [courseVideo.theme_id, courseVideo.position, afterCourseVideo.position]);
+                `, [afterCourseVideo.theme_id, courseVideo.position, afterCourseVideo.position]);
                 
                 const updatedCourseVideo = (await client.query(`
                     UPDATE COURSE_VIDEOS
                     SET
-                        position = $3
+                        position = $2,
+                        theme_id = $3
                     WHERE
-                        theme_id = $1 AND id = $2
+                        id = $1
                     RETURNING *;
-                `, [courseVideo.theme_id, course_id, afterCourseVideo.position])).rows[0] as ICourseVideo;
+                    `, [courseVideo.id, afterCourseVideo.position, afterCourseVideo.theme_id])
+                ).rows[0] as ICourseVideo;
                 
                 return updatedCourseVideo
 
@@ -144,16 +146,18 @@ export class CourseVideoService {
                         position = position + 1
                     WHERE
                         theme_id = $1 AND position > $2 AND position < $3
-                `, [courseVideo.theme_id, afterCourseVideo.position, courseVideo.position])
+                `, [afterCourseVideo.theme_id, afterCourseVideo.position, courseVideo.position])
 
                 const updatedCourseVideo = (await client.query(`
                     UPDATE COURSE_VIDEOS
                     SET
-                        position = $3
-                    WHERE   
-                        theme_id = $1 AND id = $2
+                        position = $2,
+                        theme_id = $3
+                    WHERE
+                        id = $1
                     RETURNING *;
-                `, [courseVideo.theme_id, course_id, afterCourseVideo.position + 1])).rows[0] as ICourseVideo;
+                    `, [courseVideo.id, afterCourseVideo.position + 1, afterCourseVideo.theme_id])
+                ).rows[0] as ICourseVideo;
                 
                 return updatedCourseVideo;
             }
@@ -167,16 +171,17 @@ export class CourseVideoService {
                         position = position - 1
                     WHERE
                         theme_id = $1 AND position < $2 AND position > $3
-                `, [courseVideo.theme_id, beforeCourseVideo.position, courseVideo.position]);
+                `, [beforeCourseVideo.theme_id, beforeCourseVideo.position, courseVideo.position]);
 
                 const updatedCourseVideo = (await client.query(`
                     UPDATE COURSE_VIDEOS
                     SET
-                        position = $3
+                        position = $2,
+                        theme_id = $3
                     WHERE
-                        theme_id = $1 AND id = $2
+                        id = $1
                     RETURNING *;
-                `, [courseVideo.theme_id, courseVideo.id, beforeCourseVideo.position - 1])).rows[0] as ICourseVideo;
+                `, [courseVideo.id, beforeCourseVideo.position - 1, beforeCourseVideo.theme_id])).rows[0] as ICourseVideo;
 
                 return updatedCourseVideo;
 
@@ -187,16 +192,17 @@ export class CourseVideoService {
                         position = position + 1
                     WHERE
                         theme_id = $1 AND position >= $2 AND position < $3
-                `, [courseVideo.theme_id, beforeCourseVideo.position, courseVideo.position]);
+                `, [beforeCourseVideo.theme_id, beforeCourseVideo.position, courseVideo.position]);
 
                 const updateCourseVideo = (await client.query(`
                     UPDATE COURSE_VIDEOS
                     SET
-                        position = $3
+                        position = $3,
+                        theme_id = $4
                     WHERE
-                        theme_id = $1 AND id = $2
+                        id = $1
                     RETURNING *;
-                `, [courseVideo.theme_id, courseVideo.id, beforeCourseVideo.position])).rows[0] as ICourseVideo;
+                `, [courseVideo.id, beforeCourseVideo.position, beforeCourseVideo.theme_id])).rows[0] as ICourseVideo;
 
                 return updateCourseVideo;
             }
