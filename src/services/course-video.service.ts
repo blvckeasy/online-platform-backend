@@ -91,6 +91,12 @@ export class CourseVideoService {
     ): Promise<ICourseVideo> {
         const { after_video_id, before_video_id, course_id } = updateCourseVideoPositionInput;
 
+        if (!course_id)
+            throw new RequiredParamException(
+                "course_id param is required!",
+                ErrorTypes.REQUIRED_PARAM,
+            );
+
         if (after_video_id && before_video_id)
             throw new RequiredParamException(
                 "you can send either after_video_id or before_video_id parameters to the server.", 
