@@ -112,11 +112,28 @@ export class CourseVideoService {
                     WHERE
                         theme_id = $1 AND id = $2
                     RETURNING *;
-                `, [courseVideo.theme_id, course_id, afterCourseVideo.position])).rows[0] as ICourseVideo
+                `, [courseVideo.theme_id, course_id, afterCourseVideo.position])).rows[0] as ICourseVideo;
+                
                 return updatedCourseVideo
 
             } else if (courseVideo.position > afterCourseVideo.position) {
+                await client.query(`
+                    UPDATE COURSE_VIDEOS
+                    SET
+                        position = position + 1
+                    WHERE
+                        theme_id = $1 AND position > $2 AND position < $3
+                `, [courseVideo.theme_id, afterCourseVideo.id, courseVideo.position])
+
+                const updatedCourseVideo = (await client.query(`
+                    UPDATE COURSE_VIDEOS
+                    SET
+                        position = $3
+                    WHERE   
+                        theme_id = $1 AND id = $2
+                `, [courseVideo.theme_id, course_id, afterCourseVideo.position + 1])).rows[0] as ICourseVideo;
                 
+                return updatedCourseVideo;
             }
         }
     }
