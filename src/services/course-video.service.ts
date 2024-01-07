@@ -10,7 +10,7 @@ import {
     IUpdateCourseVideoPositionInput
 } from "../interfaces/course-video.interface";
 import { ErrorTypes } from "../utils/error-handler";
-import { NotFoundException } from "../utils/errors";
+import { NotFoundException, RequiredParamException } from "../utils/errors";
 import { client } from "../utils/pg";
 
 
@@ -20,7 +20,9 @@ export class CourseVideoService {
         return theme_videos.length + 1
     }
 
-    static async createCourseVideoWithoutVideo (createCourseVideoWithoutVideoInput: ICreateCourseVideoWithoutVideo): Promise<ICourseVideoWithoutVideo> {
+    static async createCourseVideoWithoutVideo (
+        createCourseVideoWithoutVideoInput: ICreateCourseVideoWithoutVideo
+    ): Promise<ICourseVideoWithoutVideo> {
         const { theme_id, title, description } = createCourseVideoWithoutVideoInput;
         const position = await this.generatePositionNumber(theme_id);
 
@@ -84,11 +86,23 @@ export class CourseVideoService {
         return updatedCourseVideo;
     }
 
-    static async updateCourseVideoPosition (updateCourseVideoPositionInput: IUpdateCourseVideoPositionInput): Promise<ICourseVideo> {
+    static async updateCourseVideoPosition (
+        updateCourseVideoPositionInput: IUpdateCourseVideoPositionInput
+    ): Promise<ICourseVideo> {
         const { after_video_id, before_video_id, course_id } = updateCourseVideoPositionInput;
 
-        console.log(updateCourseVideoPositionInput);
-
+        if (after_video_id && before_video_id)
+            throw new RequiredParamException(
+                "you can send either after_video_id or before_video_id parameters to the server.", 
+                ErrorTypes.REQUIRED_PARAM
+            );
+    
+        if (!(after_video_id || before_video_id))
+            throw new RequiredParamException(
+                "after_video_id or before_video_id must be required!", 
+                ErrorTypes.REQUIRED_PARAM
+            )
+        
         const courseVideo = await this.getCourseVideo({ id: course_id });
         if (!courseVideo) throw new NotFoundException("Course is not found!", ErrorTypes.NOT_FOUND);
 
@@ -124,7 +138,7 @@ export class CourseVideoService {
                         position = position + 1
                     WHERE
                         theme_id = $1 AND position > $2 AND position < $3
-                `, [courseVideo.theme_id, afterCourseVideo.id, courseVideo.position])
+                `, [courseVideo.theme_id, afterCourseVideo.position, courseVideo.position])
 
                 const updatedCourseVideo = (await client.query(`
                     UPDATE COURSE_VIDEOS
