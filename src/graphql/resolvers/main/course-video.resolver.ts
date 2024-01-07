@@ -100,16 +100,20 @@ export const CourseVideoResolver: BaseContext = {
             { updateCourseVideoPositionInput }: { updateCourseVideoPositionInput: IUpdateCourseVideoPositionInput },
             context: any
         ):  Promise<ICourseVideo> {
-            const token: string = context.req.headers.token;
-            if (!token) throw new NotFoundException("Token is require!", ErrorTypes.INVALID_TOKEN);
+            try {
+                const token: string = context.req.headers.token;
+                if (!token) throw new NotFoundException("Token is require!", ErrorTypes.INVALID_TOKEN);
 
-            const user = JWT.verify(token) as IParsedAccessToken;
-            
-            const foundUser: IUser = await UserService.findOne({ id: user.id })
-            if (!foundUser) throw new NotFoundException("User not found!", ErrorTypes.NOT_FOUND);
+                const user = JWT.verify(token) as IParsedAccessToken;
+                
+                const foundUser: IUser = await UserService.findOne({ id: user.id })
+                if (!foundUser) throw new NotFoundException("User not found!", ErrorTypes.NOT_FOUND);
 
-            const updatedCourseVideo = await CourseVideoService.updateCourseVideoPosition(updateCourseVideoPositionInput);
-            return updatedCourseVideo;
+                const updatedCourseVideo = await CourseVideoService.updateCourseVideoPosition(updateCourseVideoPositionInput);
+                return updatedCourseVideo;
+            } catch (error) {
+                throw await ErrorHandler(error);
+            }
         },
         async deleteCourseVideo(parent: any, { deleteCourseVideoInput }: { deleteCourseVideoInput: IDeleteCourseVideoInput }, context: any): Promise<ICourseVideo> {
             try {

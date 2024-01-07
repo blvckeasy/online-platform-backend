@@ -87,50 +87,37 @@ export class CourseVideoService {
     static async updateCourseVideoPosition (updateCourseVideoPositionInput: IUpdateCourseVideoPositionInput): Promise<ICourseVideo> {
         const { after_video_id, before_video_id, course_id } = updateCourseVideoPositionInput;
 
+        console.log(updateCourseVideoPositionInput);
+
         const courseVideo = await this.getCourseVideo({ id: course_id });
         if (!courseVideo) throw new NotFoundException("Course is not found!", ErrorTypes.NOT_FOUND);
 
-        const afterCourseVideo = await this.getCourseVideo({ id: after_video_id });
-        const beforeCourseVideo = await this.getCourseVideo({ id: before_video_id });
+        const afterCourseVideo = await this.getCourseVideo({ id: after_video_id || -1 });
+        const beforeCourseVideo = await this.getCourseVideo({ id: before_video_id || -1 });
 
-        if (courseVideo.position < beforeCourseVideo.position) {
-            await client.query(`
-                UPDATE COURSE_VIDEOS
-                SET
-                    position = position - 1
-                WHERE
-                    theme_id = $1 AND position > $2 and position < $3
-            `, [courseVideo.theme_id, courseVideo.position, afterCourseVideo.position]);
-            
-            const updatedCourseVideo = (await client.query(`
-                UPDATE COURSE_VIDEOS
-                SET
-                    position = $3
-                WHERE
-                    theme_id = $1 AND id = $2
-                RETURNING *;
-            `, [courseVideo.theme_id, course_id, beforeCourseVideo.position])).rows[0] as ICourseVideo;
+        if (afterCourseVideo) {
+            if (courseVideo.position < afterCourseVideo.position) {
+                await client.query(`
+                    UPDATE COURSE_VIDEOS
+                    SET
+                        position = position - 1
+                    WHERE
+                        theme_id = $1 AND position > $2 AND position <= $3;
+                `, [courseVideo.theme_id, courseVideo.position, afterCourseVideo.position]);
+                
+                const updatedCourseVideo = (await client.query(`
+                    UPDATE COURSE_VIDEOS
+                    SET
+                        position = $3
+                    WHERE
+                        theme_id = $1 AND id = $2
+                    RETURNING *;
+                `, [courseVideo.theme_id, course_id, afterCourseVideo.position])).rows[0] as ICourseVideo
+                return updatedCourseVideo
 
-            return updatedCourseVideo;
-        } else {
-            await client.query(`
-                UPDATE COURSE_VIDEOS
-                SET
-                    position = position + 1
-                WHERE
-                    theme_id = $1 AND position > $2 AND position < $3
-            `, [courseVideo.theme_id, beforeCourseVideo.position, courseVideo.position])
-            
-            const updatedCourseVideo = (await client.query(`
-                UPDATE COURSE_VIDEOS
-                SET
-                    position = $3
-                WHERE
-                    theme_id = $1 AND id = $2
-                RETURNING *;
-            `, [courseVideo.theme_id, course_id, beforeCourseVideo.position + 1])).rows[0] as ICourseVideo;
-
-            return updatedCourseVideo;
+            } else if (courseVideo.position > afterCourseVideo.position) {
+                
+            }
         }
     }
 
