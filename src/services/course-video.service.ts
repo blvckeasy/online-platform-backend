@@ -132,6 +132,7 @@ export class CourseVideoService {
                         position = $3
                     WHERE   
                         theme_id = $1 AND id = $2
+                    RETURNING *;
                 `, [courseVideo.theme_id, course_id, afterCourseVideo.position + 1])).rows[0] as ICourseVideo;
                 
                 return updatedCourseVideo;
@@ -154,12 +155,30 @@ export class CourseVideoService {
                         position = $3
                     WHERE
                         theme_id = $1 AND id = $2
+                    RETURNING *;
                 `, [courseVideo.theme_id, courseVideo.id, beforeCourseVideo.position - 1])).rows[0] as ICourseVideo;
 
                 return updatedCourseVideo;
 
             } else if (courseVideo.position > beforeCourseVideo.position) {
-                
+                await client.query(`
+                    UPDATE COURSE_VIDEOS
+                    SET
+                        position = position + 1
+                    WHERE
+                        theme_id = $1 AND position >= $2 AND position < $3
+                `, [courseVideo.theme_id, beforeCourseVideo.position, courseVideo.position]);
+
+                const updateCourseVideo = (await client.query(`
+                    UPDATE COURSE_VIDEOS
+                    SET
+                        position = $3
+                    WHERE
+                        theme_id = $1 AND id = $2
+                    RETURNING *;
+                `, [courseVideo.theme_id, courseVideo.id, beforeCourseVideo.position])).rows[0] as ICourseVideo;
+
+                return updateCourseVideo;
             }
 
         } 
