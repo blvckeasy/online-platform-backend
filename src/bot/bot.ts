@@ -16,7 +16,7 @@ async function botBootstrap () {
 ⬇️ Kontaktingizni yuboring (tugmani bosib)
         `, { reply_markup: keyboard })
     });
-      
+
     bot.on(':contact', async (ctx: Context) => {
         try {
             const message = ctx.update.message;
@@ -53,7 +53,8 @@ async function botBootstrap () {
             const { data, errors } = await response.json();
 
             if (errors) {
-                console.error(errors);
+                ctx.reply("Voy nimadur hato bo'ldi 🥺.")
+                console.log(errors);
                 return;
             }
 
@@ -69,6 +70,48 @@ async function botBootstrap () {
             })
         } catch (error) {
             console.log(error);
+        }
+    })
+
+    bot.on("message", async (ctx: Context) => {
+        const message = ctx.message;
+
+        if (message.chat.id == 1881954930) {
+            const query = `
+                query {
+                    getUsers {
+                        role
+                        telegram_user_id
+                    }
+                }
+            `
+
+            const response = await await fetch(BACKEND_URL + '/graphql', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query })
+            });
+
+            const { data, errors } = await response.json()
+
+            if (errors) {
+                console.log(errors);
+                return ctx.reply("Voy serverda nimadur hato ketti 🥺")
+            }
+
+            const users = data.getUsers;
+
+            users.forEach((user: any) => {
+                if (user.role == 'student') {
+                    ctx.api.sendMessage(user.telegram_user_id as number, message.text, {
+                        reply_markup: {
+                            remove_keyboard: true,
+                        }
+                    })
+                }
+            });
         }
     })
 

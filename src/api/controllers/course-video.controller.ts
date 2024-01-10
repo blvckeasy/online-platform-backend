@@ -94,7 +94,7 @@ export default class CourseVideoController {
             const { fileId } = req.params;
             const data: any = await this.googleDrive.getFile(fileId);
         
-            data.pipe(res);
+            data.pipe(res)
         } catch (error) {
             next(error);
         }

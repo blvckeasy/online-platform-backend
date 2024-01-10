@@ -13,7 +13,6 @@ import graphqlScalarTypes from './utils/graphql-scalar-types';
 import Routes from './api/routes'
 import { ConfigService } from './config/config.service';
 import botBootstrap from './bot/bot';
-import { AlreadyExistsExcaption, InternalServerError } from './utils/errors';
 import { ErrorTypes } from './utils/error-handler';
 import { FILE } from './utils/file';
 

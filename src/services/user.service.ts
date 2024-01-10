@@ -39,6 +39,14 @@ export class UserService {
         return foundUser;
     }
 
+    static async findAll (): Promise<IUser[]> {
+        const result = await client.query(`
+            SELECT * FROM USERS;
+        `)
+        const users: IUser[] = result.rows;
+        return users;
+    }
+
 	static async findOneWithID(id: number): Promise<IUser> {
         const result = await client.query(`
 			SELECT * FROM USERS WHERE id = $1 LIMIT 1;

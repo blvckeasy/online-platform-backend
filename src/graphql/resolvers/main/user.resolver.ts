@@ -8,7 +8,15 @@ import ErrorHandler, { ErrorTypes } from "../../../utils/error-handler";
 
 export const userResolver: BaseContext = {
 	Query: {
-		getMe: async (parent: any, __: any, context: any): Promise<IUser> => {
+		getUsers: async (): Promise<IUser[]> => {
+			try {
+				const users = await UserService.findAll()
+				return users;
+			} catch (error) {
+				throw await ErrorHandler(error);
+			}
+		},
+		getMe: async (_: any, __: any, context: any): Promise<IUser> => {
 			try {
 				const { token } = context.req.headers;
 				if (!token) throw new RequiredParamException("Token is required!", ErrorTypes.REQUIRED_PARAM);
