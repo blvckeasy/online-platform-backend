@@ -4,6 +4,10 @@ import { UserService } from "../../../services/user.service";
 import JWT from "../../../utils/jwt";
 import { InvalidTokenException, RequiredParamException } from "../../../utils/errors";
 import ErrorHandler, { ErrorTypes } from "../../../utils/error-handler";
+import { PubSub } from 'graphql-subscriptions'
+
+
+const pubSub = new PubSub()
 
 
 export const userResolver: BaseContext = {
@@ -46,6 +50,10 @@ export const userResolver: BaseContext = {
   	},
 
 	Mutation: {
+		scheduleOperation(_, { name }) {
+            pubSub.publish('OPERATION_FINISHED', { operationFinished: { name, endDate: new Date().toDateString() } });
+            return `Operation: ${name} scheduled!`;
+        },
 		updateUser: async (_: any, { updateUserInput }: { updateUserInput: IUpdateUserInput }, context: any): Promise<IUser> => {
 			try {
 				const { token } = context.req.headers;
@@ -59,5 +67,10 @@ export const userResolver: BaseContext = {
 				throw await ErrorHandler(error);
 			}
 		},
-	}
+	},
+	Subscription: {
+        operationFinished: {
+            subscribe: () => pubSub.asyncIterator(['OPERATION_FINISHED'])
+        } 
+    }
 };

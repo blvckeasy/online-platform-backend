@@ -3,6 +3,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { 
     ApolloServerPluginDrainHttpServer,
 } from '@apollo/server/plugin/drainHttpServer'
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import express, { NextFunction, Request, Response } from 'express';
 import http from 'http';
 import cors from 'cors';
@@ -15,6 +16,8 @@ import { ConfigService } from './config/config.service';
 import botBootstrap from './bot/bot';
 import { ErrorTypes } from './utils/error-handler';
 import { FILE } from './utils/file';
+import { WebSocketServer } from 'ws'
+import { useServer } from 'graphql-ws/lib/use/ws'
 
 
 async function bootstrap() {
@@ -24,12 +27,28 @@ async function bootstrap() {
 
     const app = express();
     const httpServer = http.createServer(app);
+    
+    const schema = makeExecutableSchema({ typeDefs, resolvers: [ graphqlScalarTypes, ...resolvers ] });
+    
+    const wsServer = new WebSocketServer({
+        server: httpServer,
+        path: '/graphql'
+    })
+    const wsServerCleanup = useServer({ schema }, wsServer )
 
     const server = new ApolloServer({
-        typeDefs,
-        resolvers: [graphqlScalarTypes, ...resolvers],
+        schema,
         plugins: [
             ApolloServerPluginDrainHttpServer({ httpServer }),
+            {
+                async serverWillStart() {
+                    return {
+                        async drainServer() {
+                            await wsServerCleanup.dispose()
+                        }
+                    }
+                }
+            }
         ],
     });
 
