@@ -1,4 +1,4 @@
-import { IGetLastUserActivitySearchParam, IUserActivity, IUserConnected, IUserDisconnected } from "../interfaces/user-activities.interface";
+import { IGetLastUserActivitySearchParam, IGetUserActivities, IUserActivity, IUserConnected, IUserDisconnected } from "../interfaces/user-activities.interface";
 import { client } from "../utils/pg";
 
 export class UserActivitiesService {
@@ -21,6 +21,18 @@ export class UserActivitiesService {
         `, [user_id])).rows[0] as IUserActivity;
 
         return foundActivity;
+    }
+
+    static async getUserActivities ( searchParam: IGetUserActivities ): Promise<IUserActivity[] | []> {
+        const { from_date, to_date, user_id } = searchParam;
+    
+        const foundActivities = (await client.query(`
+            SELECT * FROM user_activities
+            WHERE
+                USER_ID = $1 AND CONNECTED_TIMESTAMP >= '$2'::INTERVAL AND CONNECTED_TIMESTAMP <= '$3'::INTERVAL;
+        `, [user_id, from_date, to_date || "NOW()"])).rows as IUserActivity[];
+
+        return foundActivities;
     }
 
     static async disconnected ( param: IUserDisconnected ): Promise<IUserActivity | null> {

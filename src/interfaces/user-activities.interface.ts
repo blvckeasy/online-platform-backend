@@ -20,3 +20,9 @@ export interface IUserDisconnected {
 export interface IGetLastUserActivitySearchParam {
     user_id: number;
 }
+
+export interface IGetUserActivities {
+    from_date: Date;
+    to_date: Date;
+    user_id: number;
+}
