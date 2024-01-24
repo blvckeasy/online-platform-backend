@@ -75,6 +75,14 @@ CREATE TABLE IF NOT EXISTS faq (
     answer VARCHAR(1024) NOT NULL
 );
 
+DROP TABLE user_activities CASCADE;
+CREATE TABLE IF NOT EXISTS user_activities (
+    ID BIGSERIAL PRIMARY KEY,
+    USER_ID BIGINT NOT NULL REFERENCES users(ID),
+    USER_AGENT VARCHAR(1024) NOT NULL,
+    CONNECTED_TIMESTAMP TIMESTAMPTZ DEFAULT NOW(),
+    DISCONNECTED_TIMESTAMP TIMESTAMPTZ
+);
 
 INSERT INTO faq (question, answer) VALUES
     ('Kurs bepulmi?', 'Narxlarni har bir kursning sahifasida ko’rishingiz mumkin.'),

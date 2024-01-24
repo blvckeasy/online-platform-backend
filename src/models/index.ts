@@ -27,12 +27,14 @@ import CoursesModel from "./courses.model";
 import CourseThemesModel from "./course-themes.model";
 import CourseVideosModel from "./course-videos.model";
 import FAQModel from "./faq.model";
+import UserActivitiesModel from "./user-activities.model";
 
 export default function initModels () {
     new UserModel();
     new OTPModel();
     new UserProfileAvatarModel();
     new UsersQueueModel();
+    new UserActivitiesModel();
     new CoursesModel();
     new CourseThemesModel();
     new CourseVideosModel();

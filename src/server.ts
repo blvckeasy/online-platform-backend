@@ -34,7 +34,18 @@ async function bootstrap() {
         server: httpServer,
         path: '/graphql'
     })
-    const wsServerCleanup = useServer({ schema }, wsServer )
+    const wsServerCleanup = useServer({
+        schema,
+        onConnect: async (ctx: any) => {
+            const { token } = ctx.connectionParams;
+            if (token) {
+                
+            }
+        },
+        onDisconnect: async (ctx, code, reason) => {
+            console.log("disconnected:", reason);
+        }
+    }, wsServer )
 
     const server = new ApolloServer({
         schema,
@@ -52,8 +63,8 @@ async function bootstrap() {
         ],
     });
 
-    await botBootstrap();
-    await connectDatabase();
+    // await botBootstrap();
+    // await connectDatabase();
     await server.start();
 
     app.use(express.json());
