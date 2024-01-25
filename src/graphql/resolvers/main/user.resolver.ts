@@ -71,7 +71,6 @@ export const userResolver: BaseContext = {
 	Subscription: {
         operationFinished: {
             subscribe: () => pubSub.asyncIterator(['OPERATION_FINISHED']),
-			
         } 
     }
 };

@@ -14,10 +14,13 @@ import graphqlScalarTypes from './utils/graphql-scalar-types';
 import Routes from './api/routes'
 import { ConfigService } from './config/config.service';
 import botBootstrap from './bot/bot';
-import { ErrorTypes } from './utils/error-handler';
+import ErrorHandler, { ErrorTypes } from './utils/error-handler';
 import { FILE } from './utils/file';
 import { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
+import JWT from './utils/jwt';
+import { UserActivitiesService } from './services/user-activities.service';
+import { IParsedAccessToken } from './interfaces/jwt.interface';
 
 
 async function bootstrap() {
@@ -37,13 +40,31 @@ async function bootstrap() {
     const wsServerCleanup = useServer({
         schema,
         onConnect: async (ctx: any) => {
-            const { token } = ctx.connectionParams;
-            if (token) {
-                
+            try {
+                const { token } = ctx.connectionParams;
+                console.log("connected:", Object.keys(ctx["extra"]["request"]));
+
+                if (token) {
+                    const user = JWT.verify(token as string);
+                    // console.log(user);
+                }
+            } catch (error) {
             }
         },
         onDisconnect: async (ctx, code, reason) => {
-            console.log("disconnected:", reason);
+            try {
+
+                const { token } = ctx.connectionParams;
+                if (token) {
+                    const user = JWT.verify(token as string) as IParsedAccessToken;
+
+                    // UserActivitiesService.connected({
+                    //     user_id: user.id,
+                    //     user_agent: ""
+                    // })
+                }
+            } catch (error) {
+            }
         }
     }, wsServer )
 
@@ -63,8 +84,8 @@ async function bootstrap() {
         ],
     });
 
-    // await botBootstrap();
-    // await connectDatabase();
+    await botBootstrap();
+    await connectDatabase();
     await server.start();
 
     app.use(express.json());
@@ -115,6 +136,8 @@ async function bootstrap() {
             }
         });
     })
+
+    console.log(PORT);
 
     httpServer.listen({ port: PORT });
     console.log(`🚀 Server ready at  ${ "http" }://${ "localhost" }:${ PORT }`);
