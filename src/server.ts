@@ -42,11 +42,13 @@ async function bootstrap() {
         onConnect: async (ctx: any) => {
             try {
                 const { token } = ctx.connectionParams;
-                console.log("connected:", Object.keys(ctx["extra"]["request"]));
+                console.log("connected:");
+                const userAgent = ctx["extra"]["request"]["rawHeaders"][9];
 
+                console.log(userAgent);
                 if (token) {
                     const user = JWT.verify(token as string);
-                    // console.log(user);
+                    
                 }
             } catch (error) {
             }
