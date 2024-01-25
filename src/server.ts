@@ -137,8 +137,6 @@ async function bootstrap() {
         });
     })
 
-    console.log(PORT);
-
     httpServer.listen({ port: PORT });
     console.log(`🚀 Server ready at  ${ "http" }://${ "localhost" }:${ PORT }`);
 }
