@@ -28,7 +28,7 @@ import { UserService } from "../../../services/user.service";
 import { CourseVideoService } from "../../../services/course-video.service";
 
 
-export const CourseVideoResolver: BaseContext = {
+export const courseVideoResolver: BaseContext = {
     Query: {},
     Mutation: {
         async createCourseVideoWithoutVideo(_: any, { createCourseVideoWithoutVideoInput }: { createCourseVideoWithoutVideoInput: ICreateCourseVideoWithoutVideo }, context: any): Promise<ICourseVideoWithoutVideo> {

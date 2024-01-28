@@ -11,7 +11,7 @@ import { UserService } from "../../../services/user.service";
 import { IUser } from "../../../interfaces/user.interface";
 
 
-export const CourseResolver: BaseContext = {
+export const courseResolver: BaseContext = {
     Query: {
         getCourses: async function (_: undefined, __: {}, context: any): Promise<ICourseWithUser[]> {
             try {

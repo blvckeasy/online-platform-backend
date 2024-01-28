@@ -1,16 +1,18 @@
 import { authResvoler } from "./main/auth.resolver";
-import { CourseThemeResolver } from "./main/course-theme.resolver";
-import { CourseVideoResolver } from "./main/course-video.resolver";
-import { CourseResolver } from "./main/course.resolver";
-import { FaqResolver } from "./main/faq.resolver";
+import { courseThemeResolver } from "./main/course-theme.resolver";
+import { courseVideoResolver } from "./main/course-video.resolver";
+import { courseResolver } from "./main/course.resolver";
+import { faqResolver } from "./main/faq.resolver";
+import { userActivitiesResolver } from "./main/user-activities.resolver";
 import { userResolver } from "./main/user.resolver";
 
 
 export default [
     userResolver,
     authResvoler,
-    CourseResolver,
-    CourseThemeResolver,
-    CourseVideoResolver,
-    FaqResolver,
+    courseResolver,
+    courseThemeResolver,
+    courseVideoResolver,
+    faqResolver,
+    userActivitiesResolver,
 ]

@@ -15,7 +15,7 @@ export class UserActivitiesService {
         const { user_id } = searchParam;
         const foundActivity = (await client.query(`
             SELECT * FROM user_activities 
-            WHERE 
+            WHERE
                 USER_ID = $1 AND DISCONNECTED_TIMESTAMP IS NULL
             LIMIT 1;
         `, [user_id])).rows[0] as IUserActivity;
@@ -29,7 +29,8 @@ export class UserActivitiesService {
         const foundActivities = (await client.query(`
             SELECT * FROM user_activities
             WHERE
-                USER_ID = $1 AND CONNECTED_TIMESTAMP >= '$2'::INTERVAL AND CONNECTED_TIMESTAMP <= '$3'::INTERVAL;
+                USER_ID = $1 AND CONNECTED_TIMESTAMP >= $2::TIMESTAMP AND CONNECTED_TIMESTAMP <= $3::TIMESTAMP
+            ORDER BY CONNECTED_TIMESTAMP ASC;
         `, [user_id, from_date, to_date || "NOW()"])).rows as IUserActivity[];
 
         return foundActivities;

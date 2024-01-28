@@ -4,6 +4,7 @@ import { userTypeDef } from "./main/user.schema";
 import { courseThemeTypeDef } from "./main/course-theme.schema";
 import { courseVideoTypeDef } from "./main/course-video.schema";
 import { faqTypeDef } from "./main/faq.schme";
+import { userActivitiesTypeDef } from "./main/user-activities.schema";
 
 
 export default [
@@ -13,4 +14,5 @@ export default [
     courseThemeTypeDef,
     courseVideoTypeDef,
     faqTypeDef,
+    userActivitiesTypeDef,
 ]

@@ -9,7 +9,7 @@ import { ICourse } from "../../../interfaces/course.interface";
 import { IUser } from "../../../interfaces/user.interface";
 
 
-export const CourseThemeResolver: BaseContext = {
+export const courseThemeResolver: BaseContext = {
     Query: {},
     Mutation: {
         createCourseTheme: async (_: any, { createCourseThemeInput }: { createCourseThemeInput: ICreateCourseThemeInput }, context: any): Promise<ICourseTheme> => {

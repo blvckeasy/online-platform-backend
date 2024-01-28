@@ -30,3 +30,8 @@ export interface IGetUserActivities {
     to_date: Date;
     user_id: number;
 }
+
+export interface IGetUserActivitiesInput {
+    from_date: Date;
+    to_date: Date;
+}

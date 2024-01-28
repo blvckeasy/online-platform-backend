@@ -17,8 +17,8 @@ export default class UserActivitiesModel {
                 IP VARCHAR(64) NOT NULL,
                 SOCKET_ID VARCHAR(64) NOT NULL,
                 USER_AGENT VARCHAR(1024),
-                CONNECTED_TIMESTAMP TIMESTAMPTZ DEFAULT NOW(),
-                DISCONNECTED_TIMESTAMP TIMESTAMPTZ
+                CONNECTED_TIMESTAMP TIMESTAMP DEFAULT NOW(),
+                DISCONNECTED_TIMESTAMP TIMESTAMP
             );
         `)
     }
