@@ -1,6 +1,8 @@
 export interface IUserActivity {
     id: number;
     user_id: number;
+    IP: string;
+    socket_ID: string;
     user_agent?: string;
     connected_timestamp: Date;
     disconnected_timestamp?: Date;
@@ -8,12 +10,14 @@ export interface IUserActivity {
 
 export interface IUserConnected {
     user_id: number;
-    user_agent: string;
+    IP: string;
+    socket_ID: string;
+    user_agent?: string;
     connected_timestamp?: Date;
 }
 
 export interface IUserDisconnected {
-    user_id: number;
+    socket_ID: string;
     disconnected_timestamp?: Date;
 }
 

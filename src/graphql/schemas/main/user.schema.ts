@@ -46,16 +46,6 @@ export const userTypeDef = `#graphql
     }
 
     type Mutation {
-        scheduleOperation(name: String!): String!
         updateUser(updateUserInput: UpdateUserInput!): User!
-    }
-
-    type Subscription {
-        operationFinished: Operation!
-    }
-
-    type Operation {
-        name: String!
-        endDate: String!
     }
 `;

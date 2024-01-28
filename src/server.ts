@@ -14,10 +14,9 @@ import graphqlScalarTypes from './utils/graphql-scalar-types';
 import Routes from './api/routes'
 import { ConfigService } from './config/config.service';
 import botBootstrap from './bot/bot';
-import ErrorHandler, { ErrorTypes } from './utils/error-handler';
 import { FILE } from './utils/file';
-import { WebSocketServer } from 'ws'
-import { useServer } from 'graphql-ws/lib/use/ws'
+import { ErrorTypes } from './utils/error-handler';
+import { Server } from 'socket.io';
 import JWT from './utils/jwt';
 import { UserActivitiesService } from './services/user-activities.service';
 import { IParsedAccessToken } from './interfaces/jwt.interface';
@@ -30,65 +29,46 @@ async function bootstrap() {
 
     const app = express();
     const httpServer = http.createServer(app);
-    
+    const io = new Server(httpServer)
+
     const schema = makeExecutableSchema({ typeDefs, resolvers: [ graphqlScalarTypes, ...resolvers ] });
-    
-    const wsServer = new WebSocketServer({
-        server: httpServer,
-        path: '/graphql'
-    })
-    const wsServerCleanup = useServer({
-        schema,
-        onConnect: async (ctx: any) => {
-            try {
-                const { token } = ctx.connectionParams;
-                console.log("connected:");
-                const userAgent = ctx["extra"]["request"]["rawHeaders"][9];
-
-                console.log(userAgent);
-                if (token) {
-                    const user = JWT.verify(token as string);
-                    
-                }
-            } catch (error) {
-            }
-        },
-        onDisconnect: async (ctx, code, reason) => {
-            try {
-
-                const { token } = ctx.connectionParams;
-                if (token) {
-                    const user = JWT.verify(token as string) as IParsedAccessToken;
-
-                    // UserActivitiesService.connected({
-                    //     user_id: user.id,
-                    //     user_agent: ""
-                    // })
-                }
-            } catch (error) {
-            }
-        }
-    }, wsServer )
-
     const server = new ApolloServer({
         schema,
         plugins: [
             ApolloServerPluginDrainHttpServer({ httpServer }),
-            {
-                async serverWillStart() {
-                    return {
-                        async drainServer() {
-                            await wsServerCleanup.dispose()
-                        }
-                    }
-                }
-            }
         ],
     });
 
     await botBootstrap();
     await connectDatabase();
     await server.start();
+
+    
+    io.on('connection', async (socket) => {
+        const token = socket.request.headers.token as string;
+        const socketID = socket.id as string;
+        const userAgent = socket.handshake.headers["user-agent"] as string;
+        const IP = socket.request.connection.remoteAddress as string;
+        let user: IParsedAccessToken = null;
+
+        if (token) {
+            user = JWT.verify(token) as IParsedAccessToken;    
+        }
+
+        const connectedStatus = await UserActivitiesService.connected({
+            socket_ID: socketID,
+            IP,
+            user_id: user?.id,
+            user_agent: userAgent
+        })
+        socket.emit("connect-status", connectedStatus)
+
+        socket.on("disconnect", async () => {
+            const disconnectedStatus = await UserActivitiesService.disconnected({
+                socket_ID: socketID
+            })
+        })
+    });
 
     app.use(express.json());
     app.use(cors<cors.CorsRequest>({

@@ -3,10 +3,10 @@ import { client } from "../utils/pg";
 
 export class UserActivitiesService {
     static async connected ( param: IUserConnected ): Promise<IUserActivity> {
-        const { user_id, user_agent } = param;
+        const { user_id, user_agent, IP, socket_ID } = param;
         const newActivity = (await client.query(`
-            INSERT INTO user_activities (USER_ID, USER_AGENT) VALUES ($1, $2) RETURNING *;
-        `, [user_id, user_agent])).rows[0] as IUserActivity;
+            INSERT INTO user_activities (USER_ID, USER_AGENT, IP, SOCKET_ID) VALUES ($1, $2, $3, $4) RETURNING *;
+        `, [user_id, user_agent, IP, socket_ID])).rows[0] as IUserActivity;
 
         return newActivity
     }
@@ -36,16 +36,15 @@ export class UserActivitiesService {
     }
 
     static async disconnected ( param: IUserDisconnected ): Promise<IUserActivity | null> {
-        const { user_id } = param;
+        const { socket_ID } = param;
         const updatedActivity = (await client.query(`
             UPDATE user_activities
             SET
                 DISCONNECTED_TIMESTAMP = NOW()
             WHERE
-                USER_ID = $1 AND DISCONNECTED_TIMESTAMP IS NULL
+                SOCKET_ID = $1 AND DISCONNECTED_TIMESTAMP IS NULL
             RETURNING *
-            LIMIT 1;
-        `, [user_id])).rows[0] as IUserActivity;
+        `, [socket_ID])).rows[0] as IUserActivity;
 
         return updatedActivity;
     }
