@@ -29,7 +29,12 @@ async function bootstrap() {
 
     const app = express();
     const httpServer = http.createServer(app);
-    const io = new Server(httpServer)
+    const io = new Server(httpServer, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST", "PUT", "DELETE"]
+        }
+    })
 
     const schema = makeExecutableSchema({ typeDefs, resolvers: [ graphqlScalarTypes, ...resolvers ] });
     const server = new ApolloServer({
@@ -120,7 +125,7 @@ async function bootstrap() {
     })
 
     httpServer.listen({ port: PORT });
-    console.log(`🚀 Server ready at  ${ "http" }://${ "localhost" }:${ PORT }`);
+    console.log(`🚀 Server ready`);
 }
 
 bootstrap();
