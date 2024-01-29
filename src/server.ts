@@ -20,6 +20,7 @@ import { Server } from 'socket.io';
 import JWT from './utils/jwt';
 import { UserActivitiesService } from './services/user-activities.service';
 import { IParsedAccessToken } from './interfaces/jwt.interface';
+import { limiter } from './api/middlewares/rate-limiter'
 
 
 async function bootstrap() {
@@ -75,6 +76,7 @@ async function bootstrap() {
         })
     });
 
+    app.use(limiter);
     app.use(express.json());
     app.use(cors<cors.CorsRequest>({
         origin: "*",

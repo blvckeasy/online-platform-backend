@@ -1,12 +1,14 @@
 import { Bot, Context, Keyboard } from "grammy";
 import { ConfigService } from "../config/config.service";
+import { UserService } from "../services/user.service";
+import { IUser } from "../interfaces/user.interface";
 
 async function botBootstrap () {
     const bot = new Bot(ConfigService.get<string>("botConfig.token"));
     const { PROTOCOL, HOST, PORT } = ConfigService.get<string>("serverOptions") as any;
     const BACKEND_URL = `${PROTOCOL}://${HOST || "localhost"}:${PORT}`;
     
-    bot.command('start', async (ctx) => {
+    bot.command('start', async (ctx: Context) => {
         const keyboard = new Keyboard().requestContact('Send My Contact').oneTime(true);
         const user = ctx.update.message.chat;
     
@@ -16,6 +18,13 @@ async function botBootstrap () {
 ⬇️ Kontaktingizni yuboring (tugmani bosib)
         `, { reply_markup: keyboard })
     });
+
+    bot.command('login', async (ctx: Context) => {
+        const chatID: string = ctx.update.message.chat.id.toString();
+
+        const foundChat: IUser = await UserService.findOne({ telegram_user_id: chatID })
+        console.log(foundChat);
+    })
 
     bot.on(':contact', async (ctx: Context) => {
         try {
@@ -86,7 +95,7 @@ async function botBootstrap () {
                 }
             `
 
-            const response = await await fetch(BACKEND_URL + '/graphql', {
+            const response = await fetch(BACKEND_URL + '/graphql', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -105,11 +114,14 @@ async function botBootstrap () {
 
             users.forEach((user: any) => {
                 if (user.role == 'student') {
-                    ctx.api.sendMessage(user.telegram_user_id as number, message.text, {
-                        reply_markup: {
-                            remove_keyboard: true,
-                        }
-                    })
+                    try {
+                        // ctx.api.sendMessage(user.telegram_user_id as number, message.text, {
+                        //     reply_markup: {
+                        //         remove_keyboard: true,
+                        //     }
+                        // })
+                    } catch (error) {
+                    }
                 }
             });
         }
