@@ -19,6 +19,8 @@ enum EFileType {
 type TFileType = "image" | "video"; 
 const GOOGLE_API_KEY = ConfigService.get("googleApiKey") as IGoogleApiKey
 
+console.log(GOOGLE_API_KEY);
+
 export class FILE {
     static async writeFile(originalName: string, buffer: Buffer, type: TFileType): Promise<string> {
         const fileName = await generateFileName(originalName);
