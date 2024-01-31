@@ -33,6 +33,10 @@ async function bootstrap() {
     const io = new Server(httpServer, {
         cors: {
             origin: "*",
+            credentials: true,
+            allowedHeaders: "*",
+            optionsSuccessStatus: 200, // For legacy browser support
+            methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         }
     })
 
