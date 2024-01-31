@@ -78,7 +78,8 @@ async function bootstrap() {
             })
         })
     });
-
+    
+    app.set('trust proxy', 1)
     app.use(limiter);
     app.use(express.json());
     app.use(cors<cors.CorsRequest>({
