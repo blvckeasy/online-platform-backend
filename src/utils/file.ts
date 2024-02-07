@@ -128,3 +128,5 @@ export class GoogleDrive {
         return data;
     }
 }
+
+console.log(ConfigService.get("googleApiKey"))
