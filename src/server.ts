@@ -30,15 +30,15 @@ async function bootstrap() {
 
     const app = express();
     const httpServer = http.createServer(app);
-    const io = new Server(httpServer, {
-        cors: {
-            origin: "*",
-            // credentials: false,
-            // allowedHeaders: "*",
-            // optionsSuccessStatus: 200, // For legacy browser support
-            // methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-        }
-    })
+    // const io = new Server(httpServer, {
+    //     cors: {
+    //         origin: "*",
+    //         credentials: false,
+    //         allowedHeaders: "*",
+    //         optionsSuccessStatus: 200, // For legacy browser support
+    //         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    //     }
+    // })
 
     const schema = makeExecutableSchema({ typeDefs, resolvers: [graphqlScalarTypes, ...resolvers] });
     const server = new ApolloServer({
@@ -53,31 +53,31 @@ async function bootstrap() {
     await server.start();
 
 
-    io.on('connection', async (socket) => {
-        const token = socket.request.headers.token as string;
-        const socketID = socket.id as string;
-        const userAgent = socket.handshake.headers["user-agent"] as string;
-        const IP = socket.request.connection.remoteAddress as string;
-        let user: IParsedAccessToken = null;
+    // io.on('connection', async (socket) => {
+    //     const token = socket.request.headers.token as string;
+    //     const socketID = socket.id as string;
+    //     const userAgent = socket.handshake.headers["user-agent"] as string;
+    //     const IP = socket.request.connection.remoteAddress as string;
+    //     let user: IParsedAccessToken = null;
 
-        if (token) {
-            user = JWT.verify(token) as IParsedAccessToken;
-        }
+    //     if (token) {
+    //         user = JWT.verify(token) as IParsedAccessToken;
+    //     }
 
-        const connectedStatus = await UserActivitiesService.connected({
-            socket_ID: socketID,
-            IP,
-            user_id: user?.id,
-            user_agent: userAgent
-        })
-        socket.emit("connect-status", connectedStatus)
+    //     const connectedStatus = await UserActivitiesService.connected({
+    //         socket_ID: socketID,
+    //         IP,
+    //         user_id: user?.id,
+    //         user_agent: userAgent
+    //     })
+    //     socket.emit("connect-status", connectedStatus)
 
-        socket.on("disconnect", async () => {
-            const disconnectedStatus = await UserActivitiesService.disconnected({
-                socket_ID: socketID
-            })
-        })
-    });
+    //     socket.on("disconnect", async () => {
+    //         const disconnectedStatus = await UserActivitiesService.disconnected({
+    //             socket_ID: socketID
+    //         })
+    //     })
+    // });
 
     app.set('trust proxy', 1)
     app.use(limiter);
