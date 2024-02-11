@@ -99,13 +99,4 @@ export default class CourseVideoController {
             next(error);
         }
     }
-
-    async getVideo(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const { videoID } = req.params;
-            res.redirect(`https://www.googleapis.com/drive/v3/files/${videoID}?alt=media&key=AIzaSyAX4x22UaDyyMnGptHiNfw9TERUVJROvwU`)
-        } catch (error) {
-            next(error);
-        }
-    }
 }

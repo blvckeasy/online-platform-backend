@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
-import {
+import { 
     ApolloServerPluginDrainHttpServer,
 } from '@apollo/server/plugin/drainHttpServer'
 import { makeExecutableSchema } from '@graphql-tools/schema'
@@ -33,14 +33,14 @@ async function bootstrap() {
     const io = new Server(httpServer, {
         cors: {
             origin: "*",
-            credentials: false,
+            credentials: true,
             allowedHeaders: "*",
             optionsSuccessStatus: 200, // For legacy browser support
             methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         }
     })
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers: [graphqlScalarTypes, ...resolvers] });
+    const schema = makeExecutableSchema({ typeDefs, resolvers: [ graphqlScalarTypes, ...resolvers ] });
     const server = new ApolloServer({
         schema,
         plugins: [
@@ -52,7 +52,7 @@ async function bootstrap() {
     await connectDatabase();
     await server.start();
 
-
+    
     io.on('connection', async (socket) => {
         const token = socket.request.headers.token as string;
         const socketID = socket.id as string;
@@ -61,7 +61,7 @@ async function bootstrap() {
         let user: IParsedAccessToken = null;
 
         if (token) {
-            user = JWT.verify(token) as IParsedAccessToken;
+            user = JWT.verify(token) as IParsedAccessToken;    
         }
 
         const connectedStatus = await UserActivitiesService.connected({
@@ -78,7 +78,7 @@ async function bootstrap() {
             })
         })
     });
-
+    
     app.set('trust proxy', 1)
     app.use(limiter);
     app.use(express.json());
@@ -97,7 +97,7 @@ async function bootstrap() {
             author: 'github.com/blvckeasy',
         });
     });
-
+    
     await Routes(app);
 
     app.use("**", (req: Request, res: Response, next: NextFunction) => {
@@ -107,7 +107,7 @@ async function bootstrap() {
     app.use(async (error: any, req: Request, res: Response, next: NextFunction) => {
         const ERRORS = await import('./utils/errors');
 
-        for await (const [errorName] of Object.entries(ERRORS)) {
+        for await (const [ errorName ] of Object.entries(ERRORS)) {
             const constructorName = error.constructor.name
             if (constructorName === errorName && constructorName !== "InternalServerError") {
                 return res.send({
@@ -119,7 +119,7 @@ async function bootstrap() {
                 });
             }
         }
-
+        
         FILE.writeErrorFile(error, req);
         return res.status(500).send({
             error: {
