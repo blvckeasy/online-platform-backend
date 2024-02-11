@@ -52,7 +52,7 @@
   "author": "",
   "license": "ISC",
   "engines": {
-    "node": "20.10.0",
+    "node": "~16.20.0",
     "npm": "10.2.5"
   }
 }
