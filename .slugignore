@@ -3,3 +3,4 @@ database
 .gitignore
 .README.md
 .vscode
+.heroku
