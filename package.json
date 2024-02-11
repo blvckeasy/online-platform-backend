@@ -2,7 +2,7 @@
   "name": "typescript",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node --max-old-space-size dist/server.js",
+    "start": "tsc && node --max_old_space_size dist/server.js",
     "start:dev": "nodemon src/server.ts",
     "bot:dev": "nodemon src/bot/bot.ts"
   },
