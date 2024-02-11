@@ -1,0 +1,6 @@
+database
+*.env
+.gitignore
+.README.md
+.vscode
+.heroku

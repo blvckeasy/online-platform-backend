@@ -4,19 +4,20 @@ import { Request } from 'express';
 import Path from 'path';
 import Fs from 'fs';
 import { generateFileName } from './generate-filename';
-import googleApiKey from '../../googleApiKey.json';
 import { InternalServerError, NotFoundException } from './errors';
 import { ErrorTypes } from './error-handler';
 import { GlobalExpressMulterFile, IGoogleDriveUploadResponse } from '../interfaces/config.interface';
 import dateFormat from './date-format'
+import { ConfigService } from '../config/config.service';
+import { IGoogleApiKey } from '../interfaces/google-keys.interface';
 
 
 enum EFileType {
     'image' = 'images',
     'video' = 'videos',
 }
-
 type TFileType = "image" | "video"; 
+const GOOGLE_API_KEY = ConfigService.get("googleApiKey") as IGoogleApiKey
 
 export class FILE {
     static async writeFile(originalName: string, buffer: Buffer, type: TFileType): Promise<string> {
@@ -50,9 +51,9 @@ export class GoogleDrive {
     private async authorize(): Promise<Auth.JWT> {
         try {
             const jwtClient = new google.auth.JWT(
-                googleApiKey.client_email,
+                GOOGLE_API_KEY.client_email,
                 null,
-                googleApiKey.private_key,
+                GOOGLE_API_KEY.private_key,
                 SCOPE
             );
     
