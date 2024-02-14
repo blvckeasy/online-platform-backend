@@ -3,15 +3,15 @@ import { ConfigService } from "../config/config.service";
 import { UserService } from "../services/user.service";
 import { IUser } from "../interfaces/user.interface";
 
-async function botBootstrap () {
+async function botBootstrap() {
     const bot = new Bot(ConfigService.get<string>("botConfig.token"));
     const { PROTOCOL, HOST, PORT } = ConfigService.get<string>("serverOptions") as any;
     const BACKEND_URL = `${PROTOCOL}://${HOST || "localhost"}:${PORT}`;
-    
+
     bot.command('start', async (ctx: Context) => {
         const keyboard = new Keyboard().requestContact('Send My Contact').oneTime(true);
         const user = ctx.update.message.chat;
-    
+
         return ctx.reply(`Salom ${user["first_name"] || "foydalanuvchi"} 👋
 @onlineplatform42'ning rasmiy botiga xush kelibsiz
         
@@ -31,7 +31,7 @@ async function botBootstrap () {
             const message = ctx.update.message;
             const contact = message.contact;
             const user = message.chat as any;
-        
+
             const query = `
                 mutation($createUserQueueInput: CreateUserQueueInput!) {
                     generateCode(createUserQueueInput: $createUserQueueInput) {
@@ -45,19 +45,19 @@ async function botBootstrap () {
 
             const variables = {
                 createUserQueueInput: {
-                  telegram_user_id: String(user.id),
-                  contact: contact.phone_number,
-                  fullname: `${user.first_name} ${user.last_name || ""}`.trim(),
+                    telegram_user_id: String(user.id),
+                    contact: contact.phone_number,
+                    fullname: `${user.first_name} ${user.last_name || ""}`.trim(),
                 }
             }
-        
+
             const response = await fetch(BACKEND_URL + '/graphql', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ query, variables })
-            }) 
+            })
 
             const { data, errors } = await response.json();
 
@@ -68,7 +68,7 @@ async function botBootstrap () {
             }
 
             const codeResponse = data.generateCode;
-            
+
             return ctx.reply(`
                 sizning 1 daqiqalik kodingiz <code>${codeResponse.code}</code>. 
             `, {

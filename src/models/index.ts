@@ -29,7 +29,7 @@ import CourseVideosModel from "./course-videos.model";
 import FAQModel from "./faq.model";
 import UserActivitiesModel from "./user-activities.model";
 
-export default function initModels () {
+export default async function initModels () {
     new UserModel();
     new OTPModel();
     new UserProfileAvatarModel();

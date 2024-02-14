@@ -4,12 +4,10 @@ import initModels from '../models';
 
 const config = ConfigService.get<ClientConfig>("databaseConfig");
 
-export const client: Client = new Client({
-    connectionString: config.connectionString
-});
+export const client: Client = new Client(config);
 
-function initPostgresqlExtensions (client: Client) {
-    client.query(`
+async function initPostgresqlExtensions (client: Client) {
+    await client.query(`
         SELECT * FROM pg_type WHERE typname = 'user_role';
     `).then((data) => {
         if (!data.rows.length) {
@@ -19,12 +17,12 @@ function initPostgresqlExtensions (client: Client) {
         }
     })
 
-    client.query(`
+    await client.query(`
         SELECT * FROM pg_type WHERE typname = 'profile_avatar_type';
     `).then((data) => {
         if (!data.rows.length) {
             client.query(`
-                CREATE TYPE profile_avatar_type AS ENUM ('teacher', 'student', 'admin');
+                CREATE TYPE profile_avatar_type AS ENUM ('image', 'gif', 'video');
             `)
         }
     })
@@ -32,9 +30,9 @@ function initPostgresqlExtensions (client: Client) {
 
 export async function connectDatabase () {
     try {
-        client.connect();
-        initPostgresqlExtensions(client);
-        initModels();
+        await client.connect();
+        await initPostgresqlExtensions(client);
+        await initModels();
         console.log("🌳 Database connecting.")
     } catch (error) {
         console.error(error);

@@ -2,7 +2,7 @@ import DotEnv from 'dotenv';
 import { join } from 'node:path';
 
 DotEnv.config({
-    // path: join(process.cwd(), '.env')
+    path: join(process.cwd(), '.env')
 })
 
 export default () => ({
@@ -26,7 +26,7 @@ export default () => ({
         connectionString: process.env.DB_CONNECTION_STRING
     },
     botConfig: {
-        token: process.env.BOT_TOKEN
+        token: process.env.BOT_TOKEN,
     },
     googleApiKey: {
         "type": process.env.GOOGLE_API_KEY_TYPE,
@@ -40,5 +40,5 @@ export default () => ({
         "auth_provider_x509_cert_url": process.env.GOOGLE_API_KEY_AUTH_PROVIDER_X509_CERT_URL,
         "client_x509_cert_url": process.env.GOOGLE_API_KEY_CLIENT_X509_CERT_URL,
         "universe_domain": process.env.GOOGLE_API_KEY_UNIVERSE_DOMAIN,
-    }      
+    }
 })
