@@ -92,9 +92,11 @@ export default class CourseVideoController {
     async getFile (req: Request, res: Response, next: NextFunction) {
         try {
             const { fileId } = req.params;
-            const data: any = await this.googleDrive.getFile(fileId);
-        
-            data.pipe(res)
+            res.redirect(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=AIzaSyAX4x22UaDyyMnGptHiNfw9TERUVJROvwU`)
+            
+            // const { fileId } = req.params;
+            // const data: any = await this.googleDrive.getFile(fileId);
+            // data.pipe(res)
         } catch (error) {
             next(error);
         }
