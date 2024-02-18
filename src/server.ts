@@ -120,7 +120,7 @@ async function bootstrap() {
             }
         }
 
-        FILE.writeErrorFile(error, req);
+        // FILE.writeErrorFile(error, req);
         return res.status(500).send({
             error: {
                 code: ErrorTypes.INTERNAL_SERVER_ERROR,
@@ -134,4 +134,13 @@ async function bootstrap() {
     console.log(`🚀 Server ready`);
 }
 
-bootstrap();
+bootstrap().then(() => {
+    for (const [key, value] of Object.entries(process.memoryUsage())) {
+        console.log(`Memory usage by ${key}, ${value / 1000000}MB `)
+    }
+})
+
+
+for (const [key, value] of Object.entries(process.memoryUsage())) {
+    console.log(`Memory usage by ${key}, ${value / 1000000}MB `)
+}

@@ -1,4 +1,4 @@
-import { google, drive_v3, Auth } from 'googleapis';
+import { google, drive_v3, GoogleApis } from 'googleapis';
 import { Readable } from 'stream';
 import { Request } from 'express';
 import Path from 'path';
@@ -16,8 +16,12 @@ enum EFileType {
     'image' = 'images',
     'video' = 'videos',
 }
-type TFileType = "image" | "video"; 
+type TFileType = "image" | "video";
+let googleAuth = (new GoogleApis()).oauth2("v2").google.auth
+
 const GOOGLE_API_KEY = ConfigService.get("googleApiKey") as IGoogleApiKey
+// const jwtClient = new googleAuth.JWT(GOOGLE_API_KEY.client_email, null, GOOGLE_API_KEY.private_key, ["https://www.googleapis.com/auth/drive"])
+
 
 export class FILE {
     static async writeFile(originalName: string, buffer: Buffer, type: TFileType): Promise<string> {
@@ -30,9 +34,9 @@ export class FILE {
         return fileName;
     }
 
-    static writeErrorFile (error: Error, req: Request): void {
-        const data: string = 
-`method: \"${req.method}\"
+    static writeErrorFile(error: Error, req: Request): void {
+        const data: string =
+            `method: \"${req.method}\"
 url: \"${req.url}\"
 date: \"${new Date()}\"
 error: \"${error}\"
@@ -43,23 +47,25 @@ body: \"(${JSON.stringify(req.body || "", null, 4)})\"
     }
 }
 
-const SCOPE = ["https://www.googleapis.com/auth/drive"];
 
 export class GoogleDrive {
-    private jwtClient: Auth.JWT;
+    private jwtClient: any;
+    private SCOPE: string[] = ["https://www.googleapis.com/auth/drive"];
+    private GOOGLE_API_KEY = ConfigService.get("googleApiKey") as IGoogleApiKey
 
-    private async authorize(): Promise<Auth.JWT> {
+
+    private async authorize(): Promise<any> { // Promise<anyAuth.JWT>
         try {
-            const jwtClient = new google.auth.JWT(
+            const jwtClient = new googleAuth.JWT(
                 GOOGLE_API_KEY.client_email,
                 null,
                 GOOGLE_API_KEY.private_key,
-                SCOPE
+                ["https://www.googleapis.com/auth/drive"]
             );
-    
+
             await jwtClient.authorize();
             this.jwtClient = jwtClient;
-    
+
             return jwtClient;
         } catch (error) {
             throw new InternalServerError(error, ErrorTypes.INTERNAL_SERVER_ERROR);
@@ -69,7 +75,7 @@ export class GoogleDrive {
     async uploadFile(FILE: GlobalExpressMulterFile, type: TFileType): Promise<IGoogleDriveUploadResponse> {
         try {
             await this.authorize()
-            
+
             if (!this.jwtClient) {
                 throw new InternalServerError("jwtClient is not found!", ErrorTypes.INTERNAL_SERVER_ERROR);
             }
@@ -85,20 +91,22 @@ export class GoogleDrive {
             bufferStream.push(buffer);
             bufferStream.push(null);
 
-            const { data } = await drive.files.create({
+            drive.files.create()
+
+            const data = await drive.files.create({
                 media: {
                     body: bufferStream,
-                    mimeType: mimetype,
+                    // mimeType: mimetype,
                 },
                 requestBody: fileMetaData as drive_v3.Schema$File,
-                fields: 'id',
+                // fields: 'id',
             }, {
                 onUploadProgress: function (data) {
                     // progress control
                 },
             });
-
-            return data as IGoogleDriveUploadResponse;
+            console.log(data);
+            return data as any | IGoogleDriveUploadResponse;
         } catch (error) {
             throw new InternalServerError(error, ErrorTypes.INTERNAL_SERVER_ERROR);
         }
@@ -108,13 +116,13 @@ export class GoogleDrive {
         await this.authorize();
 
         const drive = google.drive({ version: 'v3', auth: this.jwtClient })
-        
+
         const data = await new Promise((resolve, reject) => {
             drive.files.get({
                 fileId: fileID,
-                alt: 'media',
-                fields: 'size',
-                supportsAllDrives: true,
+                // alt: 'media',
+                // fields: 'size',
+                // supportsAllDrives: true,
             }, {
                 responseType: 'stream',
             }, (err, event) => {
