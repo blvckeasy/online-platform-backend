@@ -2,7 +2,7 @@
   "name": "typescript",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node --max_old_space_size dist/server.js",
+    "start": "tsc && node dist/server.js",
     "start:dev": "nodemon src/server.ts",
     "bot:dev": "nodemon src/bot/bot.ts"
   },
@@ -53,6 +53,6 @@
   "license": "ISC",
   "engines": {
     "node": "20.10.0",
-    "npm": "10.2.5"
+    "npm": "10.4.0"
   }
 }
