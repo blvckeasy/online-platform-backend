@@ -28,6 +28,7 @@ import CourseThemesModel from "./course-themes.model";
 import CourseVideosModel from "./course-videos.model";
 import FAQModel from "./faq.model";
 import UserActivitiesModel from "./user-activities.model";
+import CoursesRatingsModel from './course-rating.model'
 
 export default async function initModels () {
     new UserModel();
@@ -39,4 +40,5 @@ export default async function initModels () {
     new CourseThemesModel();
     new CourseVideosModel();
     new FAQModel();
+    new CoursesRatingsModel();
 }

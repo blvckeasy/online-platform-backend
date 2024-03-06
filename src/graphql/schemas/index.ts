@@ -5,6 +5,7 @@ import { courseThemeTypeDef } from "./main/course-theme.schema";
 import { courseVideoTypeDef } from "./main/course-video.schema";
 import { faqTypeDef } from "./main/faq.schme";
 import { userActivitiesTypeDef } from "./main/user-activities.schema";
+import { courseRatingTypeDef } from './main/course-rating.schema'
 
 
 export default [
@@ -15,4 +16,5 @@ export default [
     courseVideoTypeDef,
     faqTypeDef,
     userActivitiesTypeDef,
+    courseRatingTypeDef,    
 ]
