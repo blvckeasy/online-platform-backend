@@ -10,6 +10,7 @@ export const courseTypeDef = `#graphql
         title: String!
         price: Float
         description: String
+        rating: Int!
     }
 
     type CourseWithUser {

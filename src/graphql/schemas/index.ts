@@ -11,10 +11,10 @@ import { courseRatingTypeDef } from './main/course-rating.schema'
 export default [
     userTypeDef,
     authTypeDef,
+    courseRatingTypeDef,
     courseTypeDef,
     courseThemeTypeDef,
     courseVideoTypeDef,
     faqTypeDef,
     userActivitiesTypeDef,
-    courseRatingTypeDef,    
 ]

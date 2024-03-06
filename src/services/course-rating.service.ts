@@ -4,15 +4,16 @@ import {
 	IGetCourseRating,
 	IUpdateCourseRating,
 } from "../interfaces/course-rating.interface";
+import { ErrorTypes } from "../utils/error-handler";
+import { NotFoundException } from "../utils/errors";
 import { client } from "../utils/pg";
 
-
 export class CourseRatingService {
-    /**
-     * 
-     * @param getCourseRatingInput 
-     * @returns 
-     */
+	/**
+	 *
+	 * @param getCourseRatingInput
+	 * @returns
+	 */
 	static async getOne(
 		getCourseRatingInput: IGetCourseRating
 	): Promise<ICourseRating | Error> {
@@ -26,6 +27,13 @@ export class CourseRatingService {
 				[course_id]
 			)
 		).rows as ICourseRating[];
+
+		if (!foundedCourseRating.length) {
+			throw new NotFoundException(
+				"Course rating not found!",
+				ErrorTypes.NOT_FOUND
+			);
+		}
 
 		const rating: ICourseRating = {
 			id: foundedCourseRating[0].id,
@@ -41,12 +49,11 @@ export class CourseRatingService {
 		return rating;
 	}
 
-
-    /**
-     * 
-     * @param createCourseRatingInput 
-     * @returns 
-     */
+	/**
+	 *
+	 * @param createCourseRatingInput
+	 * @returns
+	 */
 	static async create(
 		createCourseRatingInput: ICreateCourseRating
 	): Promise<ICourseRating | Error> {
@@ -65,12 +72,11 @@ export class CourseRatingService {
 		return newCourseRating;
 	}
 
-
-    /**
-     * 
-     * @param updateCourseRatingInput 
-     * @returns 
-     */
+	/**
+	 *
+	 * @param updateCourseRatingInput
+	 * @returns
+	 */
 	static async update(
 		updateCourseRatingInput: IUpdateCourseRating
 	): Promise<ICourseRating | Error> {

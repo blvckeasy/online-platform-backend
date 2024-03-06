@@ -9,6 +9,7 @@ export interface ICourse {
     title: string;
     price?: number;
     description?: string;
+    rating?: number;
 }
 
 export interface ICourseWithUser {
